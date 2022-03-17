@@ -4,6 +4,6 @@ namespace TinyMais.Domain.Abstractions.Models
 {
     public interface IAppSettings
     {
-        public Credencial Credencial { get; set; }
+        public TrackCash TrackCash { get; set; }
     }
 }

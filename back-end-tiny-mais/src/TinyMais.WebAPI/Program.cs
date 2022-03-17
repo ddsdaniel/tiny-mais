@@ -1,3 +1,10 @@
+using DDS.Logs.Middlewares;
+using TinyMais.Application.Workers;
+using TinyMais.Infra.ConciliadorFinanceiro.TrackCash.Abstractions;
+using TinyMais.Infra.ConciliadorFinanceiro.TrackCash.Services;
+using TinyMais.Infra.CrossCutting.IoC;
+using TinyMais.WebAPI.HostedService;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +13,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddConfiguracoesIoC(builder.Configuration);
+builder.Services.AddHostedService<SchedulerBackgroundService>();
+builder.Services.AddSingleton<BaixarPedidoWorker>();
+builder.Services.AddScoped<IPedidoHttpClient, PedidoHttpClient>();
+builder.Services.AddHttpClient();
+builder.Services.AddLogging();
 
 var app = builder.Build();
 
@@ -21,5 +34,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.Run();

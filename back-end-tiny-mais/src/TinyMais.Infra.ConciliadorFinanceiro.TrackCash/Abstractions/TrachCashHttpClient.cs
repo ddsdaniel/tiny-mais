@@ -10,27 +10,28 @@ namespace TinyMais.Infra.ConciliadorFinanceiro.TrackCash.Abstractions
     public abstract class TrachCashHttpClient : Service
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger _logger;
+        private readonly ILogger<TrachCashHttpClient> _logger;
         protected const string URL_BASE = "https://sistema.trackcash.com.br/api";
 
         public TrachCashHttpClient(
             HttpClient httpClient,
             IAppSettings appSettings,
-            ILogger logger
+            ILogger<TrachCashHttpClient> logger
             )
         {
             _httpClient = httpClient;
             _logger = logger;
-            Autenticar(appSettings.Credencial);
+            Autenticar(appSettings);
         }
 
-        private void Autenticar(Credencial credencial)
+        private void Autenticar(IAppSettings appSettings)
         {
-            var credenciaisBytes = Encoding.ASCII.GetBytes($"{credencial.Usuario}:{credencial.Senha}");
+            var credenciaisBytes = Encoding.ASCII.GetBytes($"{appSettings.TrackCash.Credencial.Usuario}:{appSettings.TrackCash.Credencial.Senha}");
 
             var credenciaisBase64 = Convert.ToBase64String(credenciaisBytes);
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credenciaisBase64);
+            _httpClient.DefaultRequestHeaders.Add("token", appSettings.TrackCash.ApiToken);
         }
 
         protected async Task<TViewModel?> GetAsync<TViewModel>(string rota)
