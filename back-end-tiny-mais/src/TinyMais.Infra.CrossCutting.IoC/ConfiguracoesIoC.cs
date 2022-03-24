@@ -10,12 +10,7 @@ namespace TinyMais.Infra.CrossCutting.IoC
     {
         public static IServiceCollection AddConfiguracoesIoC(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<AppSettings>(appSetting =>
-            {
-                configuration.GetSection(nameof(AppSettings)).Bind(appSetting);
-            });
-
-            services.AddSingleton<IAppSettings>(serviceProvider => serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value);
+            
 
             return services;
         }

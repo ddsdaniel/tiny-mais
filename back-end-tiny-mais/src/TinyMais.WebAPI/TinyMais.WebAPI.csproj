@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TinyMais.Application\TinyMais.Application.csproj" />
-    <ProjectReference Include="..\TinyMais.Infra.CrossCutting.IoC\TinyMais.Infra.CrossCutting.IoC.csproj" />
   </ItemGroup>
 
   <ItemGroup>

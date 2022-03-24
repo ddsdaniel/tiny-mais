@@ -8,12 +8,12 @@ namespace TinyMais.WebAPI.HostedService
     {
         private readonly ILogger<SchedulerBackgroundService> _logger;
         private readonly IServiceProvider _serviceProvider;
-        private readonly BaixarPedidoWorker _baixarPedidoWorker;
+        private readonly BaixarRecebiveisDeOntemWorker _baixarPedidoWorker;
 
         public SchedulerBackgroundService(
             ILogger<SchedulerBackgroundService> logger,
             IServiceProvider serviceProvider,
-            BaixarPedidoWorker baixarPedidoWorker
+            BaixarRecebiveisDeOntemWorker baixarPedidoWorker
             )
         {
             _logger = logger;
@@ -35,8 +35,6 @@ namespace TinyMais.WebAPI.HostedService
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _baixarPedidoWorker.WorkAsync().Wait();
-
             ExecutarDiariamente(0, 0, _baixarPedidoWorker, stoppingToken);
             return Task.CompletedTask;
         }
@@ -51,6 +49,8 @@ namespace TinyMais.WebAPI.HostedService
             if (primeiraExecucao < DateTime.Now)
                 primeiraExecucao = primeiraExecucao.AddDays(1);
 
+            primeiraExecucao = DateTime.Now.AddSeconds(2);
+
             var tempoEsperaPrimeiraExecucao = primeiraExecucao - DateTime.Now;
 
             Observable.Concat(
@@ -58,8 +58,15 @@ namespace TinyMais.WebAPI.HostedService
                 Observable.Interval(TimeSpan.FromDays(1))
                 ).Subscribe(_ =>
                 {
-                    _logger.LogInformation($"Executando {worker.GetType().Name}...");
-                    worker.WorkAsync().Wait();
+                    try
+                    {
+                        _logger.LogInformation($"Executando {worker.GetType().Name}...");
+                        worker.WorkAsync().Wait();
+                    }
+                    catch (Exception erro)
+                    {
+                        _logger.LogError($"{erro.Message} em {erro.StackTrace}");
+                    }
                 }, stoppingToken);
         }
     }

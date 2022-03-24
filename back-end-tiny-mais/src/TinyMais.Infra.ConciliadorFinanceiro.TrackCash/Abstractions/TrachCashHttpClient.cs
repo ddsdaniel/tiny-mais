@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Net.Http.Headers;
 using System.Text;
 using TinyMais.Domain.Abstractions.Models;
 using TinyMais.Domain.Abstractions.Services;
-using TinyMais.Domain.Models;
 
 namespace TinyMais.Infra.ConciliadorFinanceiro.TrackCash.Abstractions
 {
@@ -26,12 +24,15 @@ namespace TinyMais.Infra.ConciliadorFinanceiro.TrackCash.Abstractions
 
         private void Autenticar(IAppSettings appSettings)
         {
-            var credenciaisBytes = Encoding.ASCII.GetBytes($"{appSettings.TrackCash.Credencial.Usuario}:{appSettings.TrackCash.Credencial.Senha}");
+            var usuarioSenha = $"{appSettings.TrackCash.Credencial.Usuario}:{appSettings.TrackCash.Credencial.Senha}";
+
+            var credenciaisBytes = Encoding.ASCII.GetBytes(usuarioSenha);
 
             var credenciaisBase64 = Convert.ToBase64String(credenciaisBytes);
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credenciaisBase64);
-            _httpClient.DefaultRequestHeaders.Add("token", appSettings.TrackCash.ApiToken);
+            //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credenciaisBase64);
+            //_httpClient.DefaultRequestHeaders.Add("token", appSettings.TrackCash.ApiToken);
+            _httpClient.DefaultRequestHeaders.Add("token", credenciaisBase64);
         }
 
         protected async Task<TViewModel?> GetAsync<TViewModel>(string rota)

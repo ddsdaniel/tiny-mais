@@ -1,28 +1,16 @@
 using DDS.Logs.Middlewares;
-using TinyMais.Application.Workers;
-using TinyMais.Infra.ConciliadorFinanceiro.TrackCash.Abstractions;
-using TinyMais.Infra.ConciliadorFinanceiro.TrackCash.Services;
-using TinyMais.Infra.CrossCutting.IoC;
-using TinyMais.WebAPI.HostedService;
+using TinyMais.Application.Abstractions.AppServices;
+using TinyMais.WebAPI.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddConfiguracoesIoC(builder.Configuration);
-builder.Services.AddHostedService<SchedulerBackgroundService>();
-builder.Services.AddSingleton<BaixarPedidoWorker>();
-builder.Services.AddScoped<IPedidoHttpClient, PedidoHttpClient>();
-builder.Services.AddHttpClient();
+builder.Services.AddInjecaoDependenciasConfig(builder.Configuration);
 builder.Services.AddLogging();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -36,5 +24,17 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
+
+if (args.Length == 2)
+{
+    var dataInicial = Convert.ToDateTime(args[0]);
+    var dataFinal = Convert.ToDateTime(args[1]);
+
+    using var sp = builder?.Services?.BuildServiceProvider();
+    using var scope = sp?.CreateScope();
+    var baixarRecebiveisService = scope?.ServiceProvider.GetRequiredService<IBaixarRecebiveisAppService>();
+
+    await baixarRecebiveisService?.BaixarAsync(dataInicial, dataFinal);
+}
 
 app.Run();

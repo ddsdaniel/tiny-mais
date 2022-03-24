@@ -11,15 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03-Domain", "03-Domain", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-Infra", "04-Infra", "{8763B0F3-F2D9-4C79-B85F-D9424D145A26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMais.WebAPI", "src\TinyMais.WebAPI\TinyMais.WebAPI.csproj", "{643647F1-EF95-4D3E-AFDD-0064C973DA2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyMais.WebAPI", "src\TinyMais.WebAPI\TinyMais.WebAPI.csproj", "{643647F1-EF95-4D3E-AFDD-0064C973DA2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMais.Application", "src\TinyMais.Application\TinyMais.Application.csproj", "{F84E6770-73D6-4171-A822-B10951A4B3FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyMais.Application", "src\TinyMais.Application\TinyMais.Application.csproj", "{F84E6770-73D6-4171-A822-B10951A4B3FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMais.Domain", "src\TinyMais.Domain\TinyMais.Domain.csproj", "{17E007D3-A05E-4B81-9F70-360EE3EAF958}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyMais.Domain", "src\TinyMais.Domain\TinyMais.Domain.csproj", "{17E007D3-A05E-4B81-9F70-360EE3EAF958}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMais.Infra.CrossCutting.IoC", "src\TinyMais.Infra.CrossCutting.IoC\TinyMais.Infra.CrossCutting.IoC.csproj", "{A14DFB6D-55ED-404F-BAD2-9D7ED204AA04}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMais.Infra.ConciliadorFinanceiro.TrackCash", "src\TinyMais.Infra.ConciliadorFinanceiro.TrackCash\TinyMais.Infra.ConciliadorFinanceiro.TrackCash.csproj", "{AD1C3C0E-AF41-41C4-8B3A-6B0D4EA0C3AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyMais.Infra.ConciliadorFinanceiro.TrackCash", "src\TinyMais.Infra.ConciliadorFinanceiro.TrackCash\TinyMais.Infra.ConciliadorFinanceiro.TrackCash.csproj", "{AD1C3C0E-AF41-41C4-8B3A-6B0D4EA0C3AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +37,6 @@ Global
 		{17E007D3-A05E-4B81-9F70-360EE3EAF958}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17E007D3-A05E-4B81-9F70-360EE3EAF958}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17E007D3-A05E-4B81-9F70-360EE3EAF958}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A14DFB6D-55ED-404F-BAD2-9D7ED204AA04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A14DFB6D-55ED-404F-BAD2-9D7ED204AA04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A14DFB6D-55ED-404F-BAD2-9D7ED204AA04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A14DFB6D-55ED-404F-BAD2-9D7ED204AA04}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD1C3C0E-AF41-41C4-8B3A-6B0D4EA0C3AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD1C3C0E-AF41-41C4-8B3A-6B0D4EA0C3AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD1C3C0E-AF41-41C4-8B3A-6B0D4EA0C3AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,7 +49,6 @@ Global
 		{643647F1-EF95-4D3E-AFDD-0064C973DA2A} = {B9D64C3D-782D-4A1A-914D-7D9C41C79517}
 		{F84E6770-73D6-4171-A822-B10951A4B3FB} = {DB4879B4-38A3-43FA-9628-E2EA7BE0B4D1}
 		{17E007D3-A05E-4B81-9F70-360EE3EAF958} = {9D358872-ABCF-4DF3-B4A1-9D2AD2358AE9}
-		{A14DFB6D-55ED-404F-BAD2-9D7ED204AA04} = {8763B0F3-F2D9-4C79-B85F-D9424D145A26}
 		{AD1C3C0E-AF41-41C4-8B3A-6B0D4EA0C3AF} = {8763B0F3-F2D9-4C79-B85F-D9424D145A26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

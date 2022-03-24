@@ -1,4 +1,4 @@
-﻿namespace TinyMais.Infra.ConciliadorFinanceiro.TrackCash.DTOs
+﻿namespace TinyMais.Infra.ConciliadorFinanceiro.TrackCash.DTOs.Pedidos
 {
     public class OrderDTO
     {
