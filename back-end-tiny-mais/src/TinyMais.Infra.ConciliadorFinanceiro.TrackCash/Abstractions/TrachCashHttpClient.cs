@@ -30,8 +30,6 @@ namespace TinyMais.Infra.ConciliadorFinanceiro.TrackCash.Abstractions
 
             var credenciaisBase64 = Convert.ToBase64String(credenciaisBytes);
 
-            //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credenciaisBase64);
-            //_httpClient.DefaultRequestHeaders.Add("token", appSettings.TrackCash.ApiToken);
             _httpClient.DefaultRequestHeaders.Add("token", credenciaisBase64);
         }
 

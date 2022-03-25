@@ -11,12 +11,12 @@ namespace TinyMais.Application.Workers
         {
         }
 
-        public override Task WorkAsync()
+        public override async Task WorkAsync()
         {
             var ontem = DateTime.Today.AddDays(-1);
             using var scope = ServiceProvider.CreateScope();
             var baixarRecebiveisAppService = scope.ServiceProvider.GetRequiredService<IBaixarRecebiveisAppService>();
-            return baixarRecebiveisAppService.BaixarAsync(ontem, ontem);
+            await baixarRecebiveisAppService.BaixarAsync(ontem, ontem);
         }
     }
 }

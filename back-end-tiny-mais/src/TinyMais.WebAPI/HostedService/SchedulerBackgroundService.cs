@@ -7,17 +7,14 @@ namespace TinyMais.WebAPI.HostedService
     public class SchedulerBackgroundService : BackgroundService
     {
         private readonly ILogger<SchedulerBackgroundService> _logger;
-        private readonly IServiceProvider _serviceProvider;
         private readonly BaixarRecebiveisDeOntemWorker _baixarPedidoWorker;
 
         public SchedulerBackgroundService(
             ILogger<SchedulerBackgroundService> logger,
-            IServiceProvider serviceProvider,
             BaixarRecebiveisDeOntemWorker baixarPedidoWorker
             )
         {
             _logger = logger;
-            _serviceProvider = serviceProvider;
             _baixarPedidoWorker = baixarPedidoWorker;
         }
 
