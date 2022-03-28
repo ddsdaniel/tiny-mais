@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-03-28T23:47:34.193Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36" etag="u1HRDkGzbmikXgkv818_" version="17.2.4" type="github">
+<mxfile host="app.diagrams.net" modified="2022-03-28T23:47:45.641Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36" etag="-bNIylRpkP2KF2_MGxLR" version="17.2.4" type="github">
   <diagram id="Gr5c62ZpRAw-kyi-8xV-" name="Page-1">
     <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -130,7 +130,7 @@
           <mxGeometry x="480" y="455" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="WlrvZblFKVinwTwsOCBJ-66" value="O que foi pago?&lt;br&gt;Quantas parcelas?" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fontColor=#EA6B66;" parent="1" vertex="1">
-          <mxGeometry x="960" y="445" width="120" height="80" as="geometry" />
+          <mxGeometry x="880" y="445" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="WlrvZblFKVinwTwsOCBJ-71" value="" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#EA6B66;" parent="1" source="WlrvZblFKVinwTwsOCBJ-68" target="WlrvZblFKVinwTwsOCBJ-66" edge="1">
           <mxGeometry relative="1" as="geometry" />
