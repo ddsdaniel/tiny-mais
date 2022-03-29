@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-03-28T23:47:45.641Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36" etag="-bNIylRpkP2KF2_MGxLR" version="17.2.4" type="github">
+<mxfile host="app.diagrams.net" modified="2022-03-29T00:20:07.214Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36" etag="6kO4iub_vXdY37rk5Bwa" version="17.2.4" type="github">
   <diagram id="Gr5c62ZpRAw-kyi-8xV-" name="Page-1">
     <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -137,6 +137,47 @@
         </mxCell>
         <mxCell id="WlrvZblFKVinwTwsOCBJ-68" value="Encontra" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="750" y="460" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-4" value="&lt;span style=&quot;color: rgb(33 , 33 , 33) ; font-family: &amp;#34;inter&amp;#34; , &amp;#34;opensans&amp;#34; , &amp;#34;helvetica&amp;#34; , &amp;#34;arial&amp;#34; , sans-serif ; font-size: 12px ; text-align: left&quot;&gt;mkp_order&lt;/span&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="M9f5CJ28OjOqnvfvSpDM-1" target="M9f5CJ28OjOqnvfvSpDM-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#EA6B66;" edge="1" parent="1" source="M9f5CJ28OjOqnvfvSpDM-1" target="M9f5CJ28OjOqnvfvSpDM-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="640" />
+              <mxPoint x="775" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-1" value="pedidos&lt;br&gt;&amp;lt;&amp;lt;tiny&amp;gt;&amp;gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="240" y="540" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-2" value="payments&lt;br&gt;&amp;lt;&amp;lt;track cash&amp;gt;&amp;gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="480" y="540" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-6" value="?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#EA6B66;" edge="1" parent="1" source="M9f5CJ28OjOqnvfvSpDM-5" target="M9f5CJ28OjOqnvfvSpDM-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-5" value="Início" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="110" y="545" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-7" value="contas-receber&lt;br&gt;&amp;lt;&amp;lt;tiny&amp;gt;&amp;gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="715" y="540" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-12" value="pendentes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#EA6B66;" edge="1" parent="1" source="M9f5CJ28OjOqnvfvSpDM-10" target="M9f5CJ28OjOqnvfvSpDM-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-10" value="Início" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="110" y="680" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-14" value="OC vs&lt;br&gt;numeroEcommerce" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#EA6B66;" edge="1" parent="1" source="M9f5CJ28OjOqnvfvSpDM-11" target="M9f5CJ28OjOqnvfvSpDM-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-11" value="contas-receber&lt;br&gt;&amp;lt;&amp;lt;tiny&amp;gt;&amp;gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="240" y="675" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="M9f5CJ28OjOqnvfvSpDM-13" value="pedidos&lt;br&gt;&amp;lt;&amp;lt;tiny&amp;gt;&amp;gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="480" y="675" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
