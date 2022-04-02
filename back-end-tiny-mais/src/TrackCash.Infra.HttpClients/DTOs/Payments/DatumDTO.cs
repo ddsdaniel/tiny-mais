@@ -3,6 +3,6 @@
     public class DatumDTO
     {
         public TotalDTO Total { get; set; }
-        public List<ListDTO> List { get; set; }
+        public List<PaymentListDTO> List { get; set; }
     }
 }

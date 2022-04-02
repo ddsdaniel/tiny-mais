@@ -1,6 +1,6 @@
 ﻿namespace TrackCash.Infra.HttpClients.DTOs.Payments
 {
-    public class ListDTO
+    public class PaymentListDTO
     {
         public List<OrderDTO> order { get; set; }
         public List<PaymentDTO> payments { get; set; }

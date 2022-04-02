@@ -1,6 +1,6 @@
 ﻿namespace Tiny.Infra.HttpClients.DTOs.ContasReceber
 {
-    public class ContaItemDTO
+    public class ContaContainerDTO
     {
         public ContaDTO Conta { get; set; }
     }

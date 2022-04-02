@@ -17,7 +17,7 @@ namespace Infra.HttpClients.Abstractions
             _logger = logger;
         }
 
-        protected async Task<TViewModel?> GetAsync<TViewModel>(string rota)
+        protected virtual async Task<TViewModel?> GetAsync<TViewModel>(string rota)
           where TViewModel : class
         {
             var response = await _httpClient.GetAsync(rota);
@@ -28,7 +28,7 @@ namespace Infra.HttpClients.Abstractions
                 : null;
         }
 
-        private async Task Criticar(HttpResponseMessage response)
+        protected async Task Criticar(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
             {

@@ -4,6 +4,6 @@ namespace Tiny.Infra.HttpClients.Abstractions.HttpClients
 {
     public interface IContaReceberHttpClient
     {
-        Task<RootDTO?> ConsultarPorIdOrigemAsync(string idOrigem);
+        Task<ContasReceberRootDTO?> ConsultarPorIdOrigemAsync(string idOrigem);
     }
 }
