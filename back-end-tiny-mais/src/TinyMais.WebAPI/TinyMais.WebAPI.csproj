@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TinyMais.Application\TinyMais.Application.csproj" />
+    <ProjectReference Include="..\TinyMais.Infra.HttpClients\TinyMais.Infra.HttpClients.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TinyMais.Infra.ConciliadorFinanceiro.TrackCash\TinyMais.Infra.ConciliadorFinanceiro.TrackCash.csproj" />
+    <ProjectReference Include="..\TinyMais.Infra.HttpClients\TinyMais.Infra.HttpClients.csproj" />
+    <ProjectReference Include="..\TrackCash.Infra.HttpClients\TrackCash.Infra.HttpClients.csproj" />
   </ItemGroup>
 
 </Project>
