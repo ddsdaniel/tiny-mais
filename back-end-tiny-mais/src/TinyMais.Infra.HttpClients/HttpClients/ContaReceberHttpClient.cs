@@ -21,9 +21,9 @@ namespace TinyMais.Infra.HttpClients.HttpClients
 
         public Task<RootDTO?> ConsultarPorIdOrigemAsync(string idOrigem)
         {
-            var filtros = $"token={_appSettings.Tiny.ApiToken}";
-            filtros += "&formato=json";
-            filtros += $"id_origem={idOrigem}";
+            var filtros = "formato=json";
+            filtros += $"&token={_appSettings.Tiny.ApiToken}";
+            filtros += $"&id_origem={idOrigem}";
 
             var url = $"{URL_BASE}/{URL_CONTAS_RECEBER}?{filtros}";
 

@@ -17,9 +17,11 @@ namespace TrackCash.Infra.HttpClients.Abstractions.HttpClients
             ) : base(httpClient, logger)
         {
             _appSettings = appSettings;
+
+            Autenticar();
         }
 
-        protected override void Autenticar()
+        private void Autenticar()
         {
             var usuarioSenha = $"{_appSettings.TrackCash.Credencial.Usuario}:{_appSettings.TrackCash.Credencial.Senha}";
 

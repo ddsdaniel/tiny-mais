@@ -46,7 +46,7 @@ namespace TinyMais.Application.AppServices
                         {
                             foreach (var order in item.order)
                             {
-                                var marketPlaceOrderId = _marketPlaceOrderIdFactory.Formatar(order.order_id, order.mkp_channel);
+                                var marketPlaceOrderId = _marketPlaceOrderIdFactory.Formatar(order.mkp_order_id, order.mkp_channel);
                                 var contasResult = await _contaReceberHttpClient.ConsultarPorIdOrigemAsync(marketPlaceOrderId);
                                 if (contasResult != null)
                                 {

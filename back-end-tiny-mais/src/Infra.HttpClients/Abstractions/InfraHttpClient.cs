@@ -15,10 +15,7 @@ namespace Infra.HttpClients.Abstractions
         {
             _httpClient = httpClient;
             _logger = logger;
-            Autenticar();
         }
-
-        protected virtual void Autenticar() { }
 
         protected async Task<TViewModel?> GetAsync<TViewModel>(string rota)
           where TViewModel : class

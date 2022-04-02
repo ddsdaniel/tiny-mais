@@ -5,7 +5,7 @@ namespace TinyMais.Infra.HttpClients.Abstractions.HttpClients
 {
     public abstract class TinyMaisHttpClient : InfraHttpClient
     {
-        protected const string URL_BASE = "https://sistema.trackcash.com.br/api";
+        protected const string URL_BASE = "https://api.tiny.com.br/api2";
 
         protected TinyMaisHttpClient(
             HttpClient httpClient,

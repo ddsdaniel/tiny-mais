@@ -16,6 +16,7 @@ namespace TrackCash.Infra.HttpClients.HttpClients
             ILogger<PaymentHttpClient> logger
             ) : base(httpClient, logger, appSettings)
         {
+
         }
 
         public Task<RootDTO?> ConsultarPorDataAsync(DateTime dataInicial, DateTime dataFinal)
