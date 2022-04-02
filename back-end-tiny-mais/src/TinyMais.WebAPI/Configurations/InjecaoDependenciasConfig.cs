@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
+using Tiny.Infra.HttpClients.Abstractions.HttpClients;
+using Tiny.Infra.HttpClients.HttpClients;
 using TinyMais.Application.Abstractions.AppServices;
 using TinyMais.Application.AppServices;
 using TinyMais.Application.Workers;
 using TinyMais.Domain.Abstractions.Models;
 using TinyMais.Domain.Models;
-using TinyMais.Infra.HttpClients.Abstractions.HttpClients;
-using TinyMais.Infra.HttpClients.HttpClients;
 using TinyMais.WebAPI.HostedService;
 using TrackCash.Infra.HttpClients.Abstractions.Formatters;
 using TrackCash.Infra.HttpClients.Abstractions.HttpClients;

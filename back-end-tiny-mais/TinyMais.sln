@@ -17,11 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyMais.Application", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyMais.Domain", "src\TinyMais.Domain\TinyMais.Domain.csproj", "{17E007D3-A05E-4B81-9F70-360EE3EAF958}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infra.HttpClients", "src\Infra.HttpClients\Infra.HttpClients.csproj", "{9ED17F22-C038-4EC1-931C-611FC8371B82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infra.HttpClients", "src\Infra.HttpClients\Infra.HttpClients.csproj", "{9ED17F22-C038-4EC1-931C-611FC8371B82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackCash.Infra.HttpClients", "src\TrackCash.Infra.HttpClients\TrackCash.Infra.HttpClients.csproj", "{237A5430-649C-467D-9CF8-1600BF68AB96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackCash.Infra.HttpClients", "src\TrackCash.Infra.HttpClients\TrackCash.Infra.HttpClients.csproj", "{237A5430-649C-467D-9CF8-1600BF68AB96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMais.Infra.HttpClients", "src\TinyMais.Infra.HttpClients\TinyMais.Infra.HttpClients.csproj", "{EF9FEC68-6AC7-46CE-BC5A-EAB98150DD58}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiny.Infra.HttpClients", "src\Tiny.Infra.HttpClients\Tiny.Infra.HttpClients.csproj", "{A89897EC-9CC8-47F1-AB36-D1E758B1AA90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +49,10 @@ Global
 		{237A5430-649C-467D-9CF8-1600BF68AB96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{237A5430-649C-467D-9CF8-1600BF68AB96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{237A5430-649C-467D-9CF8-1600BF68AB96}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF9FEC68-6AC7-46CE-BC5A-EAB98150DD58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF9FEC68-6AC7-46CE-BC5A-EAB98150DD58}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF9FEC68-6AC7-46CE-BC5A-EAB98150DD58}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF9FEC68-6AC7-46CE-BC5A-EAB98150DD58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A89897EC-9CC8-47F1-AB36-D1E758B1AA90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A89897EC-9CC8-47F1-AB36-D1E758B1AA90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A89897EC-9CC8-47F1-AB36-D1E758B1AA90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A89897EC-9CC8-47F1-AB36-D1E758B1AA90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,7 +63,7 @@ Global
 		{17E007D3-A05E-4B81-9F70-360EE3EAF958} = {9D358872-ABCF-4DF3-B4A1-9D2AD2358AE9}
 		{9ED17F22-C038-4EC1-931C-611FC8371B82} = {8763B0F3-F2D9-4C79-B85F-D9424D145A26}
 		{237A5430-649C-467D-9CF8-1600BF68AB96} = {8763B0F3-F2D9-4C79-B85F-D9424D145A26}
-		{EF9FEC68-6AC7-46CE-BC5A-EAB98150DD58} = {8763B0F3-F2D9-4C79-B85F-D9424D145A26}
+		{A89897EC-9CC8-47F1-AB36-D1E758B1AA90} = {8763B0F3-F2D9-4C79-B85F-D9424D145A26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70D44B80-EAAE-4B28-A026-CC4C25FFE5FE}

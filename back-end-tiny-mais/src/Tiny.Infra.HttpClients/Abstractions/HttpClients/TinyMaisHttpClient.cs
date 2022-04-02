@@ -1,7 +1,7 @@
 ﻿using Infra.HttpClients.Abstractions;
 using Microsoft.Extensions.Logging;
 
-namespace TinyMais.Infra.HttpClients.Abstractions.HttpClients
+namespace Tiny.Infra.HttpClients.Abstractions.HttpClients
 {
     public abstract class TinyMaisHttpClient : InfraHttpClient
     {

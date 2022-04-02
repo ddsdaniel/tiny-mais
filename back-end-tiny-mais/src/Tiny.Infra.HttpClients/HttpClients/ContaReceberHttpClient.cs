@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using Tiny.Infra.HttpClients.Abstractions.HttpClients;
+using Tiny.Infra.HttpClients.DTOs.ContasReceber;
 using TinyMais.Domain.Abstractions.Models;
-using TinyMais.Infra.HttpClients.Abstractions.HttpClients;
-using TinyMais.Infra.HttpClients.DTOs.ContasReceber;
 
-namespace TinyMais.Infra.HttpClients.HttpClients
+namespace Tiny.Infra.HttpClients.HttpClients
 {
     public class ContaReceberHttpClient : TinyMaisHttpClient, IContaReceberHttpClient
     {

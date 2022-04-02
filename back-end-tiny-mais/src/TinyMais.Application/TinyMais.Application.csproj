@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TinyMais.Infra.HttpClients\TinyMais.Infra.HttpClients.csproj" />
+    <ProjectReference Include="..\Tiny.Infra.HttpClients\Tiny.Infra.HttpClients.csproj" />
     <ProjectReference Include="..\TrackCash.Infra.HttpClients\TrackCash.Infra.HttpClients.csproj" />
   </ItemGroup>
 

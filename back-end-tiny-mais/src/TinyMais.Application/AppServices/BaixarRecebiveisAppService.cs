@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using Tiny.Infra.HttpClients.Abstractions.HttpClients;
 using TinyMais.Application.Abstractions.AppServices;
-using TinyMais.Infra.HttpClients.Abstractions.HttpClients;
 using TrackCash.Infra.HttpClients.Abstractions.Formatters;
 using TrackCash.Infra.HttpClients.Abstractions.HttpClients;
 

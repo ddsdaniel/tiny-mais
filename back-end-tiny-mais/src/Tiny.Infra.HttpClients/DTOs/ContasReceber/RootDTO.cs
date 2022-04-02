@@ -1,4 +1,4 @@
-﻿namespace TinyMais.Infra.HttpClients.DTOs.ContasReceber
+﻿namespace Tiny.Infra.HttpClients.DTOs.ContasReceber
 {
     public class RootDTO
     {

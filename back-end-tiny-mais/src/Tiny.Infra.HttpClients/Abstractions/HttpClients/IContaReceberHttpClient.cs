@@ -1,6 +1,6 @@
-﻿using TinyMais.Infra.HttpClients.DTOs.ContasReceber;
+﻿using Tiny.Infra.HttpClients.DTOs.ContasReceber;
 
-namespace TinyMais.Infra.HttpClients.Abstractions.HttpClients
+namespace Tiny.Infra.HttpClients.Abstractions.HttpClients
 {
     public interface IContaReceberHttpClient
     {

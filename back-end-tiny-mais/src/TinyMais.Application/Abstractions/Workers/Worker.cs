@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace TinyMais.Application.Abstractions.Workers
+﻿namespace TinyMais.Application.Abstractions.Workers
 {
     public abstract class Worker
     {
