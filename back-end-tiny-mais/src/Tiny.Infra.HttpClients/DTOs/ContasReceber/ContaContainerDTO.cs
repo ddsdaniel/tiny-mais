@@ -2,6 +2,6 @@
 {
     public class ContaContainerDTO
     {
-        public ContaDTO Conta { get; set; }
+        public ContaDTO conta { get; set; }
     }
 }

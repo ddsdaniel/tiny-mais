@@ -23,11 +23,11 @@ namespace Tiny.Infra.HttpClients.HttpClients
             _appSettings = appSettings;
         }
 
-        public Task<ContasReceberRootDTO?> ConsultarPorIdOrigemAsync(string idOrigem)
+        public Task<ContasReceberRootDTO?> ConsultarPorNumeroDocAsync(string numeroDoc)
         {
             var filtros = "formato=json";
             filtros += $"&token={_appSettings.Tiny.ApiToken}";
-            filtros += $"&id_origem={idOrigem}";
+            filtros += $"&numero_doc={numeroDoc}";
 
             var url = $"{URL_BASE}/{URL_PESQUISA}?{filtros}";
 

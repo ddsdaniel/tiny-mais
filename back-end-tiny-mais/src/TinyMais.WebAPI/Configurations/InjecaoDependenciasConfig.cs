@@ -36,6 +36,9 @@ namespace TinyMais.WebAPI.Configurations
 
             //Infra Tiny
             services.AddScoped<IContaReceberHttpClient, ContaReceberHttpClient>();
+            services.AddScoped<INotaFiscalHttpClient, NotaFiscalHttpClient>();
+            services.AddScoped<IPedidoHttpClient, PedidoHttpClient>();
+            services.AddScoped<IPedidosHttpClient, PedidosHttpClient>();
 
             //Background Services
             services.AddHostedService<SchedulerBackgroundService>();

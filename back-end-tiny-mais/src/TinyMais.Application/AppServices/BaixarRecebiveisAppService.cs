@@ -62,7 +62,7 @@ namespace TinyMais.Application.AppServices
                         var pedidoCompletoTiny = await ObterPedidoCompleto(pedidoResumidoTiny);
                         var notaFiscalTiny = await ObterNotaFiscal(pedidoCompletoTiny);
                         var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny))
-                            .Select(c => c.Conta);
+                            .Select(c => c.conta);
 
                         foreach (var pagamentoTrackCash in macroPagamento.payments)
                         {
@@ -73,19 +73,21 @@ namespace TinyMais.Application.AppServices
 
                             if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
                             {
+                                //TODO: remover campos opcionais da classe?
+                                //TODO: o histórico, categoria ou code indicam qual o campo de destino (juros, taxas, descontos, acréscimos, etc)?
+
                                 var contaBaixaTiny = new ContaBaixaDTO
                                 {
                                     id = contaTiny.id,
+                                    data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),
+                                    valorPago = Convert.ToDouble(pagamentoTrackCash.value.Replace(".", ","))//TODO: criar extension method
                                     //contaDestino = "",//opcional
-                                    data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),//TODO: testar a conversão da track cash
                                     //categoria = "",//opcional
                                     //historico = contaTiny.historico,//opcional
-                                    //TODO: o histórico, categoria ou code indicam qual o campo de destino?
                                     //valorTaxas = 0,//opcional
                                     //valorJuros = 0,//opcional
                                     //valorDesconto = 0,//opcional
                                     //valorAcrescimo = 0,//opcional
-                                    valorPago = Convert.ToDouble(pagamentoTrackCash.value)
                                 };
                                 var resultadoBaixa = await _contaReceberHttpClient.BaixarAsync(contaBaixaTiny);
                             }
@@ -102,7 +104,9 @@ namespace TinyMais.Application.AppServices
 
             var numeroNotaFiscal = $"{notaFiscal.numero}/01";//TODO: não sei se é sempre neste formato
 
-            var contasReceber = (await _contaReceberHttpClient.ConsultarPorIdOrigemAsync(numeroNotaFiscal)).retorno.contas;
+            var root = await _contaReceberHttpClient.ConsultarPorNumeroDocAsync(numeroNotaFiscal);
+
+            var contasReceber = root.retorno.contas;
 
             return contasReceber;
         }
