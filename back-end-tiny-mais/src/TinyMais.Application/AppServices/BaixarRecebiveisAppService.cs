@@ -10,6 +10,7 @@ using TinyMais.Application.Abstractions.AppServices;
 using TrackCash.Infra.HttpClients.Abstractions.Formatters;
 using TrackCash.Infra.HttpClients.Abstractions.HttpClients;
 using TrackCash.Infra.HttpClients.DTOs.Payments;
+using TrackCash.Infra.HttpClients.Extensions;
 
 namespace TinyMais.Application.AppServices
 {
@@ -80,7 +81,7 @@ namespace TinyMais.Application.AppServices
                                 {
                                     id = contaTiny.id,
                                     data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),
-                                    valorPago = Convert.ToDouble(pagamentoTrackCash.value.Replace(".", ","))//TODO: criar extension method
+                                    valorPago = pagamentoTrackCash.value.LerMoedaTrackCash()
                                     //contaDestino = "",//opcional
                                     //categoria = "",//opcional
                                     //historico = contaTiny.historico,//opcional
