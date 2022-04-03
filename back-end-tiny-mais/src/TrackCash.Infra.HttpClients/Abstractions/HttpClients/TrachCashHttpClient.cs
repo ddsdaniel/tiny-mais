@@ -5,7 +5,7 @@ using TinyMais.Domain.Abstractions.Models;
 
 namespace TrackCash.Infra.HttpClients.Abstractions.HttpClients
 {
-    public abstract class TrachCashHttpClient : InfraHttpClient
+    public abstract class TrachCashHttpClient : RestHttpClient
     {
         private readonly IAppSettings _appSettings;
         protected const string URL_BASE = "https://sistema.trackcash.com.br/api";

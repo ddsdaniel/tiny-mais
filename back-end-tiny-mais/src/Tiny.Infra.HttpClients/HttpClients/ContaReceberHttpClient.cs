@@ -1,13 +1,17 @@
 ﻿using Microsoft.Extensions.Logging;
 using Tiny.Infra.HttpClients.Abstractions.HttpClients;
 using Tiny.Infra.HttpClients.DTOs.ContasReceber;
+using Tiny.Infra.HttpClients.DTOs.ContasReceberBaixa.Request;
+using Tiny.Infra.HttpClients.DTOs.ContasReceberBaixa.Response;
 using TinyMais.Domain.Abstractions.Models;
 
 namespace Tiny.Infra.HttpClients.HttpClients
 {
     public class ContaReceberHttpClient : TinyHttpClient, IContaReceberHttpClient
     {
-        private const string URL_CONTAS_RECEBER = "contas.receber.pesquisa.php";
+        private const string URL_PESQUISA = "contas.receber.pesquisa.php";
+        private const string URL_BAIXA = "conta.receber.baixar.php";
+
         private readonly IAppSettings _appSettings;
 
         public ContaReceberHttpClient(
@@ -25,9 +29,24 @@ namespace Tiny.Infra.HttpClients.HttpClients
             filtros += $"&token={_appSettings.Tiny.ApiToken}";
             filtros += $"&id_origem={idOrigem}";
 
-            var url = $"{URL_BASE}/{URL_CONTAS_RECEBER}?{filtros}";
+            var url = $"{URL_BASE}/{URL_PESQUISA}?{filtros}";
 
             return GetAsync<ContasReceberRootDTO>(url);
+        }
+
+        public Task<ContasReceberBaixaResponseDTO?> BaixarAsync(ContaBaixaDTO contaDTO)
+        {
+            var parametros = "formato=json";
+            parametros += $"&token={_appSettings.Tiny.ApiToken}";
+
+            var url = $"{URL_BASE}/{URL_BAIXA}?{parametros}";
+
+            var contasReceberBaixaRequestRootDTO = new ContasReceberBaixaRequestDTO
+            {
+                conta = contaDTO
+            };
+
+            return PatchAsync<ContasReceberBaixaRequestDTO, ContasReceberBaixaResponseDTO>(url, contasReceberBaixaRequestRootDTO);
         }
     }
 }

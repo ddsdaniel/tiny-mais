@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Tiny.Infra.HttpClients.Abstractions.HttpClients
 {
-    public abstract class TinyHttpClient : InfraHttpClient
+    public abstract class TinyHttpClient : RestHttpClient
     {
         protected const string URL_BASE = "https://api.tiny.com.br/api2";
 
@@ -18,7 +18,7 @@ namespace Tiny.Infra.HttpClients.Abstractions.HttpClients
         protected override async Task<TViewModel?> GetAsync<TViewModel>(string rota)
             where TViewModel : class
         {
-            var response = await _httpClient.GetAsync(rota);
+            using var response = await _httpClient.GetAsync(rota);
             await Criticar(response);
 
             if (Invalido) return null;

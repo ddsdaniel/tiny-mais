@@ -2,7 +2,7 @@
 {
     public class PedidoContainerDTO
     {
-        public PedidoDTO pedido { get; set; }
+        public PedidoResumidoDTO pedido { get; set; }
     }
 
 

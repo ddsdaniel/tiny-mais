@@ -4,6 +4,6 @@
     {
         public string status_processamento { get; set; }
         public string status { get; set; }
-        public PedidoDTO pedido { get; set; }
+        public PedidoCompletoDTO pedido { get; set; }
     }
 }

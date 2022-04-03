@@ -1,6 +1,6 @@
 ﻿namespace Tiny.Infra.HttpClients.DTOs.Pedido
 {
-    public class PedidoDTO
+    public class PedidoCompletoDTO
     {
         public string id { get; set; }
         public string numero { get; set; }

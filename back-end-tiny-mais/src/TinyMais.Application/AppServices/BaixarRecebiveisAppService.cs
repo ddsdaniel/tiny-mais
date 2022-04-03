@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Tiny.Infra.HttpClients.Abstractions.HttpClients;
+using Tiny.Infra.HttpClients.Constantes;
 using Tiny.Infra.HttpClients.DTOs.ContasReceber;
+using Tiny.Infra.HttpClients.DTOs.ContasReceberBaixa.Request;
 using Tiny.Infra.HttpClients.DTOs.NotaFiscal;
 using Tiny.Infra.HttpClients.DTOs.Pedido;
 using Tiny.Infra.HttpClients.DTOs.Pedidos;
@@ -13,8 +15,8 @@ namespace TinyMais.Application.AppServices
 {
     public class BaixarRecebiveisAppService : AppService, IBaixarRecebiveisAppService
     {
-        private readonly IPaymentHttpClient _paymentHttpClient;
         private readonly ILogger<BaixarRecebiveisAppService> _logger;
+        private readonly IPaymentHttpClient _paymentHttpClient;
         private readonly IMarketPlaceOrderIdFormatter _marketPlaceOrderIdFactory;
         private readonly IContaReceberHttpClient _contaReceberHttpClient;
         private readonly INotaFiscalHttpClient _notaFiscalHttpClient;
@@ -22,8 +24,8 @@ namespace TinyMais.Application.AppServices
         private readonly IPedidosHttpClient _pedidosHttpClient;
 
         public BaixarRecebiveisAppService(
-            IPaymentHttpClient paymentHttpClient,
             ILogger<BaixarRecebiveisAppService> logger,
+            IPaymentHttpClient paymentHttpClient,
             IMarketPlaceOrderIdFormatter marketPlaceOrderIdFactory,
             IContaReceberHttpClient contaReceberHttpClient,
             INotaFiscalHttpClient notaFiscalHttpClient,
@@ -48,22 +50,45 @@ namespace TinyMais.Application.AppServices
 
             _logger.LogInformation($"Iniciando {nameof(BaixarRecebiveisAppService)}.BaixarAsync({dataInicial:dd/MM/yyyy}, {dataFinal:dd/MM/yyyy})");
 
-            var payments = await ObterPayments(dataInicial, dataFinal);
-            foreach (var payment in payments)
+            var macroPagamentos = await ObterPayments(dataInicial, dataFinal);
+            foreach (var macroPagamento in macroPagamentos)
             {
-                foreach (var order in payment.order)
+                foreach (var pedidoTrackCash in macroPagamento.order)
                 {
-                    var pedidoResumido = await ObterPedidoResumido(order);
+                    var pedidoResumidoTiny = await ObterPedidoResumido(pedidoTrackCash);
 
-                    if (pedidoResumido != null)
+                    if (pedidoResumidoTiny != null)
                     {
-                        var pedidoCompleto = await ObterPedidoCompleto(pedidoResumido);
-                        var notaFiscal = await ObterNotaFiscal(pedidoCompleto);
-                        var contasReceber = await ObterContasReceber(notaFiscal);
+                        var pedidoCompletoTiny = await ObterPedidoCompleto(pedidoResumidoTiny);
+                        var notaFiscalTiny = await ObterNotaFiscal(pedidoCompletoTiny);
+                        var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny))
+                            .Select(c => c.Conta);
 
-                        foreach (var conta in contasReceber)
+                        foreach (var pagamentoTrackCash in macroPagamento.payments)
                         {
-                            //if (conta.Conta.situacao ==)
+                            //TODO: encontrar a conta certa caso retorne mais de um registro aqui, exemplo: parcelado
+                            var contaTiny = contasReceberTiny.FirstOrDefault();
+
+                            //TODO: implementar baixa parcial?
+
+                            if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
+                            {
+                                var contaBaixaTiny = new ContaBaixaDTO
+                                {
+                                    id = contaTiny.id,
+                                    //contaDestino = "",//opcional
+                                    data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),//TODO: testar a conversão da track cash
+                                    //categoria = "",//opcional
+                                    //historico = contaTiny.historico,//opcional
+                                    //TODO: o histórico, categoria ou code indicam qual o campo de destino?
+                                    //valorTaxas = 0,//opcional
+                                    //valorJuros = 0,//opcional
+                                    //valorDesconto = 0,//opcional
+                                    //valorAcrescimo = 0,//opcional
+                                    valorPago = Convert.ToDouble(pagamentoTrackCash.value)
+                                };
+                                var resultadoBaixa = await _contaReceberHttpClient.BaixarAsync(contaBaixaTiny);
+                            }
                         }
                     }
                 }
@@ -78,11 +103,11 @@ namespace TinyMais.Application.AppServices
             var numeroNotaFiscal = $"{notaFiscal.numero}/01";//TODO: não sei se é sempre neste formato
 
             var contasReceber = (await _contaReceberHttpClient.ConsultarPorIdOrigemAsync(numeroNotaFiscal)).retorno.contas;
-            
+
             return contasReceber;
         }
 
-        private async Task<NotaFiscalDTO> ObterNotaFiscal(PedidoDTO pedido)
+        private async Task<NotaFiscalDTO> ObterNotaFiscal(PedidoCompletoDTO pedido)
         {
             _logger.LogInformation($"Obtendo nota fiscal...");
 
@@ -92,7 +117,7 @@ namespace TinyMais.Application.AppServices
             return notaFiscal;
         }
 
-        private async Task<PedidoDTO> ObterPedidoCompleto(PedidosRootDTO pedidoResumido)
+        private async Task<PedidoCompletoDTO> ObterPedidoCompleto(PedidosRootDTO pedidoResumido)
         {
             _logger.LogInformation($"Obtendo pedido completo...");
 
@@ -117,6 +142,8 @@ namespace TinyMais.Application.AppServices
         private async Task<IEnumerable<PaymentListDTO>> ObterPayments(DateTime dataInicial, DateTime dataFinal)
         {
             _logger.LogInformation($"Obtendo pagamentos...");
+
+            //TODO: implementar paginação em ObterPayments
 
             var payments = (await _paymentHttpClient.ConsultarPorDataAsync(dataInicial, dataFinal)).data.SelectMany(p => p.List);
 
