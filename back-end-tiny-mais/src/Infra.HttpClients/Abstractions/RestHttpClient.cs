@@ -19,6 +19,20 @@ namespace Infra.HttpClients.Abstractions
             _logger = logger;
         }
 
+        protected virtual async Task<TRetorno?> PostAsync<TBody, TRetorno>(string rota, TBody body)
+           where TRetorno : class
+           where TBody : class
+
+        {
+            var jsonRequest = JsonConvert.SerializeObject(body);
+
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json-post+json");
+
+            using HttpResponseMessage response = await _httpClient.PostAsync(rota, content);
+
+            return await ObterRetorno<TRetorno>(response);
+        }
+
         protected virtual async Task<TRetorno?> PatchAsync<TBody, TRetorno>(string rota, TBody body)
             where TRetorno : class
             where TBody : class
@@ -27,13 +41,19 @@ namespace Infra.HttpClients.Abstractions
             var jsonRequest = JsonConvert.SerializeObject(body);
 
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json-patch+json");
-            
+
             using HttpResponseMessage response = await _httpClient.PatchAsync(rota, content);
 
+            return await ObterRetorno<TRetorno>(response);
+        }
+
+        protected virtual async Task<TViewModel> ObterRetorno<TViewModel>(HttpResponseMessage response)
+            where TViewModel : class
+        {
             await Criticar(response);
 
             return Valido
-                ? await response.Content.ReadAsAsync<TRetorno>()
+                ? await response.Content.ReadAsAsync<TViewModel>()
                 : null;
         }
 
@@ -41,11 +61,8 @@ namespace Infra.HttpClients.Abstractions
           where TViewModel : class
         {
             using var response = await _httpClient.GetAsync(rota);
-            await Criticar(response);
 
-            return Valido
-                ? await response.Content.ReadAsAsync<TViewModel>()
-                : null;
+            return await ObterRetorno<TViewModel>(response);
         }
 
         protected async Task Criticar(HttpResponseMessage response)

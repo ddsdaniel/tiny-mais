@@ -15,12 +15,9 @@ namespace Tiny.Infra.HttpClients.Abstractions.HttpClients
         {
         }
 
-        protected override async Task<TViewModel?> GetAsync<TViewModel>(string rota)
+        protected override async Task<TViewModel> ObterRetorno<TViewModel>(HttpResponseMessage response)
             where TViewModel : class
         {
-            using var response = await _httpClient.GetAsync(rota);
-            await Criticar(response);
-
             if (Invalido) return null;
 
             var json = await response.Content.ReadAsStringAsync();
@@ -28,6 +25,7 @@ namespace Tiny.Infra.HttpClients.Abstractions.HttpClients
             var viewModel = JsonSerializer.Deserialize<TViewModel>(json);
 
             return viewModel;
+
         }
     }
 }

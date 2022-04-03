@@ -91,6 +91,15 @@ namespace TinyMais.Application.AppServices
                                     //valorAcrescimo = 0,//opcional
                                 };
                                 var resultadoBaixa = await _contaReceberHttpClient.BaixarAsync(contaBaixaTiny);
+
+                                if (resultadoBaixa.retorno.status == RetornoMetodo.Ok)
+                                {
+                                    _logger.LogInformation($"Sucesso ao baixar conta de receber: {contaBaixaTiny.historico}");
+                                }
+                                else
+                                {
+                                    _logger.LogError($"Falha ao baixar conta de receber: {contaBaixaTiny.historico}");
+                                }
                             }
                         }
                     }

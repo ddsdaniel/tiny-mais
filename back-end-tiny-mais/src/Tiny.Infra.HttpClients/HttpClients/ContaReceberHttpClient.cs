@@ -46,7 +46,7 @@ namespace Tiny.Infra.HttpClients.HttpClients
                 conta = contaDTO
             };
 
-            return PatchAsync<ContasReceberBaixaRequestDTO, ContasReceberBaixaResponseDTO>(url, contasReceberBaixaRequestRootDTO);
+            return PostAsync<ContasReceberBaixaRequestDTO, ContasReceberBaixaResponseDTO>(url, contasReceberBaixaRequestRootDTO);
         }
     }
 }
