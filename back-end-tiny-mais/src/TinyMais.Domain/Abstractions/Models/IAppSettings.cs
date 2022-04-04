@@ -6,5 +6,6 @@ namespace TinyMais.Domain.Abstractions.Models
     {
         public TrackCash TrackCash { get; set; }
         public Tiny Tiny { get; set; }
+        public IEnumerable<CodigoMarketPlace> CodigosMarketPlace { get; set; }
     }
 }

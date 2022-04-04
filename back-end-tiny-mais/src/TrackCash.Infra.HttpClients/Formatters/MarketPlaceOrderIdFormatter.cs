@@ -1,16 +1,25 @@
-﻿using TrackCash.Infra.HttpClients.Abstractions.Formatters;
+﻿using TinyMais.Domain.Abstractions.Models;
+using TrackCash.Infra.HttpClients.Abstractions.Formatters;
 
 namespace TrackCash.Infra.HttpClients.Formatters
 {
     public class MarketPlaceOrderIdFormatter : IMarketPlaceOrderIdFormatter
     {
+        private readonly IAppSettings _appSettings;
+
+        public MarketPlaceOrderIdFormatter(IAppSettings appSettings)
+        {
+            _appSettings = appSettings;
+        }
+
         public string Formatar(string orderId, string channel)
         {
-            switch (channel)
-            {
-                case "Carrefour": return $"{orderId}-A";
-                default: return orderId;
-            }
+            var codigoMarketPlace = _appSettings.CodigosMarketPlace
+                .FirstOrDefault(cm => cm.MarketPlace.ToUpper() == channel.ToUpper());
+
+            return codigoMarketPlace == null
+                ? orderId
+                : codigoMarketPlace.Codigo.Replace("{id}", orderId);
         }
     }
 }
