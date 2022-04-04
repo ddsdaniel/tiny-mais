@@ -1,13 +1,22 @@
+using DDS.Logs.Extensions;
 using DDS.Logs.Middlewares;
+using Serilog;
 using TinyMais.Application.Abstractions.AppServices;
 using TinyMais.WebAPI.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.ConfigureLogs(options =>
+{
+    options.UseMongoDB = false;
+
+    options.UseTextFile = true;
+    options.TextFileRollingInterval = RollingInterval.Day;
+    options.TextFilePath = "Logs/log.txt";
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInjecaoDependenciasConfig(builder.Configuration);
-builder.Services.AddLogging();
 
 var app = builder.Build();
 
