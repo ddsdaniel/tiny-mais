@@ -74,45 +74,56 @@ namespace TinyMais.Application.AppServices
 
                             if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
                             {
-                                //TODO: remover campos opcionais da classe?
-                                //TODO: o histórico, categoria ou code indicam qual o campo de destino (juros, taxas, descontos, acréscimos, etc)?
-
-                                var contaBaixaTiny = new ContaBaixaDTO
-                                {
-                                    id = contaTiny.id,
-                                    data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),
-                                    valorPago = pagamentoTrackCash.value.LerMoedaTrackCash()
-                                    //contaDestino = "",//opcional
-                                    //categoria = "",//opcional
-                                    //historico = contaTiny.historico,//opcional
-                                    //valorTaxas = 0,//opcional
-                                    //valorJuros = 0,//opcional
-                                    //valorDesconto = 0,//opcional
-                                    //valorAcrescimo = 0,//opcional
-                                };
-                                var resultadoBaixa = await _contaReceberHttpClient.BaixarAsync(contaBaixaTiny);
-
-                                if (resultadoBaixa.retorno.status == RetornoMetodo.Ok)
-                                {
-                                    _logger.LogInformation($"Sucesso ao baixar conta de receber: {contaBaixaTiny.historico}");
-                                }
-                                else
-                                {
-                                    _logger.LogError($"Falha ao baixar conta de receber: {contaBaixaTiny.historico}");
-                                }
+                                await BaixarContaReceber(pagamentoTrackCash, contaTiny);
                             }
                         }
                     }
                 }
             }
+            _logger.LogInformation($"Concluiu {nameof(BaixarRecebiveisAppService)}");
+        }
 
+        private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny)
+        {
+            //TODO: remover campos opcionais da classe?
+            //TODO: o histórico, categoria ou code indicam qual o campo de destino (juros, taxas, descontos, acréscimos, etc)?
+
+            _logger.LogInformation($"Baixando conta a receber {contaTiny.id}...");
+
+            var contaBaixaTiny = new ContaBaixaDTO
+            {
+                id = contaTiny.id,
+                data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),
+                valorPago = pagamentoTrackCash.value.LerMoedaTrackCash()
+                //contaDestino = "",//opcional
+                //categoria = "",//opcional
+                //historico = contaTiny.historico,//opcional
+                //valorTaxas = 0,//opcional
+                //valorJuros = 0,//opcional
+                //valorDesconto = 0,//opcional
+                //valorAcrescimo = 0,//opcional
+            };
+            var resultadoBaixa = await _contaReceberHttpClient.BaixarAsync(contaBaixaTiny);
+
+            if (resultadoBaixa.retorno.status == RetornoMetodo.Ok)
+            {
+                _logger.LogInformation($"Sucesso ao baixar conta de receber: {contaBaixaTiny.id}");
+            }
+            else
+            {
+                var erro = resultadoBaixa.retorno.erros != null
+                    ? string.Join(',', resultadoBaixa.retorno.erros.Select(e => e.erro))
+                    : string.Join(',', resultadoBaixa.retorno.registros.SelectMany(r => r.registro.erros.Select(e => e.erro)));
+
+                _logger.LogError($"Falha ao baixar conta de receber: {contaBaixaTiny.id}. {erro}");
+            }
         }
 
         private async Task<List<ContaContainerDTO>> ObterContasReceber(NotaFiscalDTO notaFiscal)
         {
-            _logger.LogInformation($"Obtendo contas a receber...");
-
             var numeroNotaFiscal = $"{notaFiscal.numero}/01";//TODO: não sei se é sempre neste formato
+
+            _logger.LogInformation($"Obtendo contas a receber {numeroNotaFiscal}...");
 
             var root = await _contaReceberHttpClient.ConsultarPorNumeroDocAsync(numeroNotaFiscal);
 
@@ -123,9 +134,9 @@ namespace TinyMais.Application.AppServices
 
         private async Task<NotaFiscalDTO> ObterNotaFiscal(PedidoCompletoDTO pedido)
         {
-            _logger.LogInformation($"Obtendo nota fiscal...");
-
             var idNotaFiscal = pedido.id_nota_fiscal;
+
+            _logger.LogInformation($"Obtendo nota fiscal {idNotaFiscal}...");
 
             var notaFiscal = (await _notaFiscalHttpClient.ConsultarPorIdAsync(idNotaFiscal)).retorno.nota_fiscal;
             return notaFiscal;
@@ -133,9 +144,9 @@ namespace TinyMais.Application.AppServices
 
         private async Task<PedidoCompletoDTO> ObterPedidoCompleto(PedidosRootDTO pedidoResumido)
         {
-            _logger.LogInformation($"Obtendo pedido completo...");
-
             string idPedido = pedidoResumido.retorno.pedidos.FirstOrDefault().pedido.id;
+
+            _logger.LogInformation($"Obtendo pedido completo {idPedido}...");
 
             var pedido = (await _pedidoHttpClient.ConsultarPorIdAsync(idPedido)).retorno.pedido;
 
@@ -144,9 +155,9 @@ namespace TinyMais.Application.AppServices
 
         private async Task<PedidosRootDTO> ObterPedidoResumido(OrderDTO order)
         {
-            _logger.LogInformation($"Obtendo pedidos (resumidos)...");
-
             var marketPlaceOrderId = _marketPlaceOrderIdFactory.Formatar(order.mkp_order_id, order.mkp_channel);
+
+            _logger.LogInformation($"Obtendo pedidos (resumidos) {order.mkp_order_id} de {order.mkp_channel}...");
 
             var pedidos = await _pedidosHttpClient.ConsultarPorNumeroEcommerceAsync(marketPlaceOrderId);
 

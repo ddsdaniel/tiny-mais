@@ -21,10 +21,18 @@ namespace Tiny.Infra.HttpClients.Abstractions.HttpClients
             if (Invalido) return null;
 
             var json = await response.Content.ReadAsStringAsync();
-            
-            var viewModel = JsonSerializer.Deserialize<TViewModel>(json);
 
-            return viewModel;
+            try
+            {
+                var viewModel = JsonSerializer.Deserialize<TViewModel>(json);
+
+                return viewModel;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Falha ao obter retorno do Tiny: {ex.Message}. {json}");
+                throw;
+            }
 
         }
     }

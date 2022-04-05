@@ -2,6 +2,6 @@
 {
     public class RegistroContainerDTO
     {
-        public RegistroContainerDTO registro { get; set; }
+        public RegistroDTO registro { get; set; }
     }
 }

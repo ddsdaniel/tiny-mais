@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Text.Json;
 using Tiny.Infra.HttpClients.Abstractions.HttpClients;
 using Tiny.Infra.HttpClients.DTOs.ContasReceber;
 using Tiny.Infra.HttpClients.DTOs.ContasReceberBaixa.Request;
@@ -36,15 +37,16 @@ namespace Tiny.Infra.HttpClients.HttpClients
 
         public Task<ContasReceberBaixaResponseDTO?> BaixarAsync(ContaBaixaDTO contaDTO)
         {
-            var parametros = "formato=json";
-            parametros += $"&token={_appSettings.Tiny.ApiToken}";
-
-            var url = $"{URL_BASE}/{URL_BAIXA}?{parametros}";
-
             var contasReceberBaixaRequestRootDTO = new ContasReceberBaixaRequestDTO
             {
                 conta = contaDTO
             };
+
+            var parametros = "formato=json";
+            parametros += $"&token={_appSettings.Tiny.ApiToken}";
+            parametros += $"&conta={JsonSerializer.Serialize(contasReceberBaixaRequestRootDTO)}";
+
+            var url = $"{URL_BASE}/{URL_BAIXA}?{parametros}";
 
             return PostAsync<ContasReceberBaixaRequestDTO, ContasReceberBaixaResponseDTO>(url, contasReceberBaixaRequestRootDTO);
         }
