@@ -19,10 +19,11 @@ namespace TrackCash.Infra.HttpClients.HttpClients
 
         }
 
-        public Task<RootDTO?> ConsultarPorDataAsync(DateTime dataInicial, DateTime dataFinal)
+        public Task<RootDTO?> ConsultarPorDataAsync(DateTime dataInicial, DateTime dataFinal, int paginaAtual)
         {
             var filtros = $"date_start={dataInicial.ToTrackCashDate()}";
             filtros += $"&date_end={dataFinal.ToTrackCashDate()}";
+            filtros += $"&page={paginaAtual}";
 
             var url = $"{URL_BASE}/{URL_PAGAMENTO}?{filtros}";
 

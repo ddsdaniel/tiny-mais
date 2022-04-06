@@ -168,11 +168,20 @@ namespace TinyMais.Application.AppServices
         {
             _logger.LogInformation($"Obtendo pagamentos...");
 
-            //TODO: implementar paginação em ObterPayments
+            var pagamentos = new List<PaymentListDTO>();
+            var paginaAtual = 1;
+            RootDTO root = null;
+            do
+            {
+                _logger.LogInformation($"Página {paginaAtual}...");
+                root = await _paymentHttpClient.ConsultarPorDataAsync(dataInicial, dataFinal, paginaAtual);
 
-            var payments = (await _paymentHttpClient.ConsultarPorDataAsync(dataInicial, dataFinal)).data.SelectMany(p => p.List);
+                pagamentos.AddRange(root.data.SelectMany(p => p.List));
 
-            return payments.Where(p => p.order != null);
+                paginaAtual++;
+            } while (paginaAtual <= root.meta.last_page);
+
+            return pagamentos.Where(p => p.order != null);
         }
     }
 }
