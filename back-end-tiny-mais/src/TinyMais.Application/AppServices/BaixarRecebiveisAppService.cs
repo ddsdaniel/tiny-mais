@@ -46,8 +46,8 @@ namespace TinyMais.Application.AppServices
         public async Task BaixarAsync(DateTime dataInicial, DateTime dataFinal)
         {
             //TODO: remover este teste
-            dataInicial = Convert.ToDateTime("11/03/2022");
-            dataFinal = Convert.ToDateTime("26/03/2022");
+            //dataInicial = Convert.ToDateTime("11/03/2022");
+            //dataFinal = Convert.ToDateTime("26/03/2022");
 
             _logger.LogInformation($"Iniciando {nameof(BaixarRecebiveisAppService)}.BaixarAsync({dataInicial:dd/MM/yyyy}, {dataFinal:dd/MM/yyyy})");
 
@@ -62,15 +62,13 @@ namespace TinyMais.Application.AppServices
                     {
                         var pedidoCompletoTiny = await ObterPedidoCompleto(pedidoResumidoTiny);
                         var notaFiscalTiny = await ObterNotaFiscal(pedidoCompletoTiny);
-                        var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny))
-                            .Select(c => c.conta);
 
                         foreach (var pagamentoTrackCash in macroPagamento.payments)
                         {
-                            //TODO: encontrar a conta certa caso retorne mais de um registro aqui, exemplo: parcelado
-                            var contaTiny = contasReceberTiny.FirstOrDefault();
+                            var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash))
+                                .Select(c => c.conta);
 
-                            //TODO: implementar baixa parcial?
+                            var contaTiny = contasReceberTiny.FirstOrDefault();
 
                             if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
                             {
@@ -87,6 +85,9 @@ namespace TinyMais.Application.AppServices
         {
             //TODO: remover campos opcionais da classe?
             //TODO: o histórico, categoria ou code indicam qual o campo de destino (juros, taxas, descontos, acréscimos, etc)?
+
+            //comissão teria que ser conciliada manualmente
+            //a questão maior é o valor cheio mesmo
 
             _logger.LogInformation($"Baixando conta a receber {contaTiny.id}...");
 
@@ -119,9 +120,10 @@ namespace TinyMais.Application.AppServices
             }
         }
 
-        private async Task<List<ContaContainerDTO>> ObterContasReceber(NotaFiscalDTO notaFiscal)
+        private async Task<List<ContaContainerDTO>> ObterContasReceber(NotaFiscalDTO notaFiscal, PaymentDTO pagamentoTrackCash)
         {
-            var numeroNotaFiscal = $"{notaFiscal.numero}/01";//TODO: não sei se é sempre neste formato
+            var parcela = pagamentoTrackCash.current_installment.PadLeft(2, '0');
+            var numeroNotaFiscal = $"{notaFiscal.numero}/{parcela}";
 
             _logger.LogInformation($"Obtendo contas a receber {numeroNotaFiscal}...");
 
