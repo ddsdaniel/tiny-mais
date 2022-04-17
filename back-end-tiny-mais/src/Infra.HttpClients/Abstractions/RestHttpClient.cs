@@ -19,11 +19,15 @@ namespace Infra.HttpClients.Abstractions
             _logger = logger;
         }
 
+        protected virtual void PrevinirConsumoExcessivo() { }
+
         protected virtual async Task<TRetorno?> PostAsync<TBody, TRetorno>(string rota, TBody body)
            where TRetorno : class
            where TBody : class
 
         {
+            PrevinirConsumoExcessivo();
+
             var jsonRequest = JsonConvert.SerializeObject(body);
 
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json-post+json");
@@ -38,6 +42,8 @@ namespace Infra.HttpClients.Abstractions
             where TBody : class
 
         {
+            PrevinirConsumoExcessivo();
+
             var jsonRequest = JsonConvert.SerializeObject(body);
 
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json-patch+json");
@@ -60,6 +66,8 @@ namespace Infra.HttpClients.Abstractions
         protected virtual async Task<TViewModel?> GetAsync<TViewModel>(string rota)
           where TViewModel : class
         {
+            PrevinirConsumoExcessivo();
+
             using var response = await _httpClient.GetAsync(rota);
 
             return await ObterRetorno<TViewModel>(response);

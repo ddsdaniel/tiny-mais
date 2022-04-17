@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using Tiny.Infra.HttpClients.Abstractions.AppServices;
 using Tiny.Infra.HttpClients.Abstractions.HttpClients;
 using Tiny.Infra.HttpClients.DTOs.ContasReceber;
 using Tiny.Infra.HttpClients.DTOs.ContasReceberBaixa.Request;
@@ -18,8 +19,9 @@ namespace Tiny.Infra.HttpClients.HttpClients
         public ContaReceberHttpClient(
             HttpClient httpClient,
             ILogger<ContaReceberHttpClient> logger,
-            IAppSettings appSettings
-            ) : base(httpClient, logger)
+            IAppSettings appSettings,
+            IPrevineConsumoExcessivoAppService previneConsumoExcessivoAppService
+            ) : base(httpClient, logger, previneConsumoExcessivoAppService)
         {
             _appSettings = appSettings;
         }

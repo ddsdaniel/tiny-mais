@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+using Tiny.Infra.HttpClients.Abstractions.AppServices;
 using Tiny.Infra.HttpClients.Abstractions.HttpClients;
+using Tiny.Infra.HttpClients.AppServices;
 using Tiny.Infra.HttpClients.HttpClients;
 using TinyMais.Application.Abstractions.AppServices;
 using TinyMais.Application.AppServices;
@@ -39,6 +41,7 @@ namespace TinyMais.WebAPI.Configurations
             services.AddScoped<INotaFiscalHttpClient, NotaFiscalHttpClient>();
             services.AddScoped<IPedidoHttpClient, PedidoHttpClient>();
             services.AddScoped<IPedidosHttpClient, PedidosHttpClient>();
+            services.AddScoped<IPrevineConsumoExcessivoAppService, PrevineConsumoExcessivoAppService>();
 
             //Background Services
             services.AddHostedService<SchedulerBackgroundService>();

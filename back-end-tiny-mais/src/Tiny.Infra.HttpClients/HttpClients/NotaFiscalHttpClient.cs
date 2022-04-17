@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Tiny.Infra.HttpClients.Abstractions.AppServices;
 using Tiny.Infra.HttpClients.Abstractions.HttpClients;
 using Tiny.Infra.HttpClients.DTOs.NotaFiscal;
 using TinyMais.Domain.Abstractions.Models;
@@ -13,8 +14,9 @@ namespace Tiny.Infra.HttpClients.HttpClients
         public NotaFiscalHttpClient(
             HttpClient httpClient,
             ILogger<NotaFiscalHttpClient> logger,
-            IAppSettings appSettings
-            ) : base(httpClient, logger)
+            IAppSettings appSettings,
+            IPrevineConsumoExcessivoAppService previneConsumoExcessivoAppService
+            ) : base(httpClient, logger, previneConsumoExcessivoAppService)
         {
             _appSettings = appSettings;
         }

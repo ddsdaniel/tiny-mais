@@ -46,8 +46,8 @@ namespace TinyMais.Application.AppServices
         public async Task BaixarAsync(DateTime dataInicial, DateTime dataFinal)
         {
             //TODO: remover este teste
-            //dataInicial = Convert.ToDateTime("11/03/2022");
-            //dataFinal = Convert.ToDateTime("26/03/2022");
+            dataInicial = Convert.ToDateTime("01/03/2022");
+            dataFinal = Convert.ToDateTime("01/03/2022");
 
             _logger.LogInformation($"Iniciando {nameof(BaixarRecebiveisAppService)}.BaixarAsync({dataInicial:dd/MM/yyyy}, {dataFinal:dd/MM/yyyy})");
 
@@ -60,25 +60,35 @@ namespace TinyMais.Application.AppServices
 
                     if (pedidoResumidoTiny != null)
                     {
-                        var pedidoCompletoTiny = await ObterPedidoCompleto(pedidoResumidoTiny);
-                        var notaFiscalTiny = await ObterNotaFiscal(pedidoCompletoTiny);
-
-                        foreach (var pagamentoTrackCash in macroPagamento.payments)
+                        if (pedidoResumidoTiny.retorno.pedidos == null)
                         {
-                            var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash))
-                                .Select(c => c.conta);
-
-                            var contaTiny = contasReceberTiny.FirstOrDefault();
-
-                            if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
+                            _logger.LogError($"{pedidoResumidoTiny.retorno.status}, código: {pedidoResumidoTiny.retorno.status_processamento}");
+                        }
+                        else
+                        {
+                            var pedidoCompletoTiny = await ObterPedidoCompleto(pedidoResumidoTiny);
+                            if (pedidoCompletoTiny != null)
                             {
-                                await BaixarContaReceber(pagamentoTrackCash, contaTiny);
+                                var notaFiscalTiny = await ObterNotaFiscal(pedidoCompletoTiny);
+
+                                foreach (var pagamentoTrackCash in macroPagamento.payments)
+                                {
+                                    var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash))
+                                        .Select(c => c.conta);
+
+                                    var contaTiny = contasReceberTiny.FirstOrDefault();
+
+                                    if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
+                                    {
+                                        await BaixarContaReceber(pagamentoTrackCash, contaTiny);
+                                    }
+                                }
                             }
                         }
                     }
                 }
+                _logger.LogInformation($"Concluiu {nameof(BaixarRecebiveisAppService)}");
             }
-            _logger.LogInformation($"Concluiu {nameof(BaixarRecebiveisAppService)}");
         }
 
         private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny)
@@ -158,8 +168,11 @@ namespace TinyMais.Application.AppServices
         private async Task<PedidosRootDTO> ObterPedidoResumido(OrderDTO order)
         {
             var marketPlaceOrderId = _marketPlaceOrderIdFactory.Formatar(order.mkp_order_id, order.mkp_channel);
-
-            _logger.LogInformation($"Obtendo pedidos (resumidos) {order.mkp_order_id} de {order.mkp_channel}...");
+            if (marketPlaceOrderId.EndsWith("1091570491966486"))
+            {
+                var x = 0;
+            }
+            _logger.LogInformation($"Obtendo pedidos (resumidos) {marketPlaceOrderId} de {order.mkp_channel}...");
 
             var pedidos = await _pedidosHttpClient.ConsultarPorNumeroEcommerceAsync(marketPlaceOrderId);
 
