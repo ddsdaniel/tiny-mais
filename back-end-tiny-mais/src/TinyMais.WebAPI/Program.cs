@@ -21,7 +21,7 @@ builder.Host
 
         options.UseTextFile = true;
         options.TextFileRollingInterval = RollingInterval.Day;
-        options.TextFilePath = "Logs/log.txt";
+        options.TextFilePath = $"{AppContext.BaseDirectory}\\Logs\\log.txt";
     })
     .UseWindowsService();
 
@@ -31,7 +31,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInjecaoDependenciasConfig(builder.Configuration);
 
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
