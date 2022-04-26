@@ -46,8 +46,8 @@ namespace TinyMais.Application.AppServices
         public async Task BaixarAsync(DateTime dataInicial, DateTime dataFinal)
         {
             //TODO: remover este teste
-            dataInicial = Convert.ToDateTime("01/03/2022");
-            dataFinal = Convert.ToDateTime("01/03/2022");
+            //dataInicial = Convert.ToDateTime("01/03/2022");
+            //dataFinal = Convert.ToDateTime("01/03/2022");
 
             _logger.LogInformation($"Iniciando {nameof(BaixarRecebiveisAppService)}.BaixarAsync({dataInicial:dd/MM/yyyy}, {dataFinal:dd/MM/yyyy})");
 
@@ -60,11 +60,7 @@ namespace TinyMais.Application.AppServices
 
                     if (pedidoResumidoTiny != null)
                     {
-                        if (pedidoResumidoTiny.retorno.pedidos == null)
-                        {
-                            _logger.LogError($"{pedidoResumidoTiny.retorno.status}, código: {pedidoResumidoTiny.retorno.status_processamento}");
-                        }
-                        else
+                        if (pedidoResumidoTiny.retorno.pedidos != null)
                         {
                             var pedidoCompletoTiny = await ObterPedidoCompleto(pedidoResumidoTiny);
                             if (pedidoCompletoTiny != null)
@@ -73,29 +69,28 @@ namespace TinyMais.Application.AppServices
 
                                 foreach (var pagamentoTrackCash in macroPagamento.payments)
                                 {
-                                    var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash))
-                                        .Select(c => c.conta);
-
-                                    var contaTiny = contasReceberTiny.FirstOrDefault();
-
-                                    if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
+                                    if (pagamentoTrackCash.code == "deposits")
                                     {
-                                        await BaixarContaReceber(pagamentoTrackCash, contaTiny);
+                                        var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash))
+                                            .Select(c => c.conta);
+
+                                        var contaTiny = contasReceberTiny.FirstOrDefault();
+
+                                        if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
+                                        {
+                                            await BaixarContaReceber(pagamentoTrackCash, contaTiny);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-                _logger.LogInformation($"Concluiu {nameof(BaixarRecebiveisAppService)}");
             }
         }
 
         private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny)
         {
-            //TODO: remover campos opcionais da classe?
-            //TODO: o histórico, categoria ou code indicam qual o campo de destino (juros, taxas, descontos, acréscimos, etc)?
-
             //comissão teria que ser conciliada manualmente
             //a questão maior é o valor cheio mesmo
 
@@ -106,13 +101,6 @@ namespace TinyMais.Application.AppServices
                 id = contaTiny.id,
                 data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),
                 valorPago = pagamentoTrackCash.value.LerMoedaTrackCash()
-                //contaDestino = "",//opcional
-                //categoria = "",//opcional
-                //historico = contaTiny.historico,//opcional
-                //valorTaxas = 0,//opcional
-                //valorJuros = 0,//opcional
-                //valorDesconto = 0,//opcional
-                //valorAcrescimo = 0,//opcional
             };
             var resultadoBaixa = await _contaReceberHttpClient.BaixarAsync(contaBaixaTiny);
 
@@ -168,13 +156,13 @@ namespace TinyMais.Application.AppServices
         private async Task<PedidosRootDTO> ObterPedidoResumido(OrderDTO order)
         {
             var marketPlaceOrderId = _marketPlaceOrderIdFactory.Formatar(order.mkp_order_id, order.mkp_channel);
-            if (marketPlaceOrderId.EndsWith("1091570491966486"))
-            {
-                var x = 0;
-            }
+            
             _logger.LogInformation($"Obtendo pedidos (resumidos) {marketPlaceOrderId} de {order.mkp_channel}...");
 
             var pedidos = await _pedidosHttpClient.ConsultarPorNumeroEcommerceAsync(marketPlaceOrderId);
+
+            if (pedidos.retorno.pedidos == null)
+                _logger.LogWarning($"Pedido não encontrado no Tiny.");
 
             return pedidos;
         }
