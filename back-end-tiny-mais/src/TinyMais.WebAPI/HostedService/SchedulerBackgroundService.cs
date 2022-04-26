@@ -46,7 +46,7 @@ namespace TinyMais.WebAPI.HostedService
             if (primeiraExecucao < DateTime.Now)
                 primeiraExecucao = primeiraExecucao.AddDays(1);
 
-            primeiraExecucao = DateTime.Now.AddSeconds(2);
+            //primeiraExecucao = DateTime.Now.AddSeconds(2);
 
             var tempoEsperaPrimeiraExecucao = primeiraExecucao - DateTime.Now;
 
