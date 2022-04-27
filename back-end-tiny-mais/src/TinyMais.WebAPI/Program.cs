@@ -31,31 +31,39 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInjecaoDependenciasConfig(builder.Configuration);
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.UseMiddleware<RequestLoggingMiddleware>();
+
+    if (args.Length == 2)
+    {
+        var dataInicial = Convert.ToDateTime(args[0]);
+        var dataFinal = Convert.ToDateTime(args[1]);
+
+        using var sp = builder?.Services?.BuildServiceProvider();
+        using var scope = sp?.CreateScope();
+        var baixarRecebiveisService = scope?.ServiceProvider.GetRequiredService<IBaixarRecebiveisAppService>();
+
+        await baixarRecebiveisService?.BaixarAsync(dataInicial, dataFinal);
+    }
+
+    app.Run();
+
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.UseMiddleware<RequestLoggingMiddleware>();
-
-if (args.Length == 2)
+catch (Exception exception)
 {
-    var dataInicial = Convert.ToDateTime(args[0]);
-    var dataFinal = Convert.ToDateTime(args[1]);
-
-    using var sp = builder?.Services?.BuildServiceProvider();
-    using var scope = sp?.CreateScope();
-    var baixarRecebiveisService = scope?.ServiceProvider.GetRequiredService<IBaixarRecebiveisAppService>();
-
-    await baixarRecebiveisService?.BaixarAsync(dataInicial, dataFinal);
+    Serilog.Log.Fatal("Erro fatal. Exception: {exception}", exception);
 }
-
-app.Run();
