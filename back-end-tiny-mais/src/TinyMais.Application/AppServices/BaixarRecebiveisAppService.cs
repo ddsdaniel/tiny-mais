@@ -46,8 +46,8 @@ namespace TinyMais.Application.AppServices
         public async Task BaixarAsync(DateTime dataInicial, DateTime dataFinal)
         {
             //TODO: remover este teste
-            //dataInicial = Convert.ToDateTime("04/05/2022");
-            //dataFinal = Convert.ToDateTime("04/05/2022");
+            //dataInicial = Convert.ToDateTime("01/03/2022");
+            //dataFinal = Convert.ToDateTime("30/04/2022");
 
             _logger.LogInformation($"Iniciando {nameof(BaixarRecebiveisAppService)}.BaixarAsync({dataInicial:dd/MM/yyyy}, {dataFinal:dd/MM/yyyy})");
 
@@ -62,6 +62,8 @@ namespace TinyMais.Application.AppServices
             {
                 foreach (var pedidoTrackCash in macroPagamento.order)
                 {
+                    //if (!pedidoTrackCash.mkp_order_id.EndsWith("1093570493946349")) continue;
+
                     var pedidoResumidoTiny = await ObterPedidoResumido(pedidoTrackCash);
 
                     if (pedidoResumidoTiny != null)
@@ -73,18 +75,21 @@ namespace TinyMais.Application.AppServices
                             {
                                 var notaFiscalTiny = await ObterNotaFiscal(pedidoCompletoTiny);
 
-                                foreach (var pagamentoTrackCash in macroPagamento.payments)
+                                if (notaFiscalTiny != null)
                                 {
-                                    if (pagamentoTrackCash.code == "deposits")
+                                    foreach (var pagamentoTrackCash in macroPagamento.payments)
                                     {
-                                        var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash))
-                                            .Select(c => c.conta);
-
-                                        var contaTiny = contasReceberTiny.FirstOrDefault();
-
-                                        if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
+                                        if (pagamentoTrackCash.code == "deposits")
                                         {
-                                            await BaixarContaReceber(pagamentoTrackCash, contaTiny);
+                                            var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash))
+                                                .Select(c => c.conta);
+
+                                            var contaTiny = contasReceberTiny.FirstOrDefault();
+
+                                            if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
+                                            {
+                                                await BaixarContaReceber(pagamentoTrackCash, contaTiny);
+                                            }
                                         }
                                     }
                                 }
@@ -145,6 +150,10 @@ namespace TinyMais.Application.AppServices
             _logger.LogInformation($"Obtendo nota fiscal {idNotaFiscal}...");
 
             var notaFiscal = (await _notaFiscalHttpClient.ConsultarPorIdAsync(idNotaFiscal)).retorno.nota_fiscal;
+
+            if (notaFiscal == null)
+                _logger.LogWarning("Nota fiscal não encontrada");
+
             return notaFiscal;
         }
 
