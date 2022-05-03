@@ -90,6 +90,10 @@ namespace TinyMais.Application.AppServices
                                             {
                                                 await BaixarContaReceber(pagamentoTrackCash, contaTiny);
                                             }
+                                            else
+                                            {
+                                                _logger.LogInformation($"Conta a receber já estava com o status {contaTiny?.situacao}");
+                                            }
                                         }
                                     }
                                 }
