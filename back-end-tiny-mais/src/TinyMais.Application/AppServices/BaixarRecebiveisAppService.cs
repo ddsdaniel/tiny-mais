@@ -60,6 +60,8 @@ namespace TinyMais.Application.AppServices
 
             foreach (var macroPagamento in macroPagamentos)
             {
+                _logger.LogInformation(new string('-', 50));
+
                 foreach (var pedidoTrackCash in macroPagamento.order)
                 {
                     //if (!pedidoTrackCash.mkp_order_id.EndsWith("1093570493946349")) continue;

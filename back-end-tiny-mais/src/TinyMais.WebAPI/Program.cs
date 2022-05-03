@@ -18,10 +18,10 @@ builder.Host
     .ConfigureLogs(options =>
     {
         options.UseMongoDB = false;
-
         options.UseTextFile = true;
         options.TextFileRollingInterval = RollingInterval.Day;
         options.TextFilePath = $"{AppContext.BaseDirectory}\\Logs\\log.txt";
+        options.ExcluirHttpClient = true;
     })
     .UseWindowsService();
 
