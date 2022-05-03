@@ -46,12 +46,18 @@ namespace TinyMais.Application.AppServices
         public async Task BaixarAsync(DateTime dataInicial, DateTime dataFinal)
         {
             //TODO: remover este teste
-            //dataInicial = Convert.ToDateTime("01/03/2022");
-            //dataFinal = Convert.ToDateTime("01/03/2022");
+            //dataInicial = Convert.ToDateTime("04/05/2022");
+            //dataFinal = Convert.ToDateTime("04/05/2022");
 
             _logger.LogInformation($"Iniciando {nameof(BaixarRecebiveisAppService)}.BaixarAsync({dataInicial:dd/MM/yyyy}, {dataFinal:dd/MM/yyyy})");
 
             var macroPagamentos = await ObterPayments(dataInicial, dataFinal);
+
+            if (!macroPagamentos.Any())
+            {
+                _logger.LogWarning("Nenhum pagamento foi retornado");
+            }
+
             foreach (var macroPagamento in macroPagamentos)
             {
                 foreach (var pedidoTrackCash in macroPagamento.order)
