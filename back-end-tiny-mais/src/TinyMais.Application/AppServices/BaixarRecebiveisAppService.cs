@@ -83,18 +83,22 @@ namespace TinyMais.Application.AppServices
                                     {
                                         if (pagamentoTrackCash.code == "deposits")
                                         {
-                                            var contasReceberTiny = (await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash))
-                                                .Select(c => c.conta);
+                                            var contasTiny = await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash);
 
-                                            var contaTiny = contasReceberTiny.FirstOrDefault();
+                                            if (contasTiny != null)
+                                            {
+                                                var contasReceberTiny = contasTiny.Select(c => c.conta);
 
-                                            if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
-                                            {
-                                                await BaixarContaReceber(pagamentoTrackCash, contaTiny);
-                                            }
-                                            else
-                                            {
-                                                _logger.LogInformation($"Conta a receber já estava com o status {contaTiny?.situacao}");
+                                                var contaTiny = contasReceberTiny.FirstOrDefault();
+
+                                                if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
+                                                {
+                                                    await BaixarContaReceber(pagamentoTrackCash, contaTiny);
+                                                }
+                                                else
+                                                {
+                                                    _logger.LogInformation($"Conta a receber já estava com o status {contaTiny?.situacao}");
+                                                }
                                             }
                                         }
                                     }
@@ -104,6 +108,9 @@ namespace TinyMais.Application.AppServices
                     }
                 }
             }
+
+            _logger.LogInformation(new string('-', 50));
+            _logger.LogInformation("Finalizou BaixarAsync");
         }
 
         private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny)
@@ -146,6 +153,9 @@ namespace TinyMais.Application.AppServices
 
             var contasReceber = root.retorno.contas;
 
+            if (contasReceber == null)
+                _logger.LogWarning("Conta a receber não encontrada no Tiny");
+
             return contasReceber;
         }
 
@@ -177,7 +187,7 @@ namespace TinyMais.Application.AppServices
         private async Task<PedidosRootDTO> ObterPedidoResumido(OrderDTO order)
         {
             var marketPlaceOrderId = _marketPlaceOrderIdFactory.Formatar(order.mkp_order_id, order.mkp_channel);
-            
+
             _logger.LogInformation($"Obtendo pedidos (resumidos) {marketPlaceOrderId} de {order.mkp_channel}...");
 
             var pedidos = await _pedidosHttpClient.ConsultarPorNumeroEcommerceAsync(marketPlaceOrderId);
@@ -190,7 +200,7 @@ namespace TinyMais.Application.AppServices
 
         private async Task<IEnumerable<PaymentListDTO>> ObterPayments(DateTime dataInicial, DateTime dataFinal)
         {
-            _logger.LogInformation($"Obtendo pagamentos...");
+            _logger.LogInformation($"Obtendo pagamentos da Track Cash...");
 
             var pagamentos = new List<PaymentListDTO>();
             var paginaAtual = 1;

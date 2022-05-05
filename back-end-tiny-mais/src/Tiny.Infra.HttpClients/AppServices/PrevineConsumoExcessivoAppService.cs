@@ -24,7 +24,7 @@ namespace Tiny.Infra.HttpClients.AppServices
             _requisicoes++;
             if (_requisicoes == _appSettings.Tiny.RequisicoesPorMinuto)
             {
-                _logger.LogWarning($"Aguardando 1 minuto para previnir o erro de consumo excessivo ao atingir {_appSettings.Tiny.RequisicoesPorMinuto} em um minuto");
+                _logger.LogInformation($"Aguardando 1 minuto para previnir consumo excessivo");
                 Thread.Sleep(TimeSpan.FromMinutes(1));
                 _requisicoes = 0;
             }
