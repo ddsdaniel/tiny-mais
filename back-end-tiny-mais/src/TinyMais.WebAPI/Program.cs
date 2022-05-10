@@ -59,9 +59,18 @@ try
 
         await baixarRecebiveisService?.BaixarAsync(dataInicial, dataFinal);
     }
-
-    app.Run();
-
+    else if (args.Length == 1)
+    {
+        using var sp = builder?.Services?.BuildServiceProvider();
+        using var scope = sp?.CreateScope();
+        var baixarRecebiveisService = scope?.ServiceProvider.GetRequiredService<IBaixarRecebiveisAppService>();
+        var idPedidoMarketPlace = args[0];
+        await baixarRecebiveisService?.BaixarAsync(idPedidoMarketPlace);
+    }
+    else
+    {
+        app.Run();
+    }
 }
 catch (Exception exception)
 {

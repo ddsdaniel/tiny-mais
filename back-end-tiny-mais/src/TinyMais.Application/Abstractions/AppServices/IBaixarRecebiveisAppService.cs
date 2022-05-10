@@ -3,5 +3,6 @@
     public interface IBaixarRecebiveisAppService : IAppService
     {
         Task BaixarAsync(DateTime dataInicial, DateTime dataFinal);
+        Task BaixarAsync(string idPedidoMarketPlace);
     }
 }

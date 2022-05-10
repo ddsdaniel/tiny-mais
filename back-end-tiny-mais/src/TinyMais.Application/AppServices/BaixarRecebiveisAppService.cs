@@ -53,6 +53,20 @@ namespace TinyMais.Application.AppServices
 
             var macroPagamentos = await ObterPayments(dataInicial, dataFinal);
 
+            await BaixarMacroPagamentosAsync(macroPagamentos);
+        }
+
+        public async Task BaixarAsync(string idPedidoMarketPlace)
+        {
+            _logger.LogInformation($"Iniciando {nameof(BaixarRecebiveisAppService)}.BaixarAsync({idPedidoMarketPlace})");
+
+            var macroPagamentos = await ObterPayments(idPedidoMarketPlace);
+
+            await BaixarMacroPagamentosAsync(macroPagamentos);
+        }
+
+        private async Task BaixarMacroPagamentosAsync(IEnumerable<PaymentListDTO> macroPagamentos)
+        {
             if (!macroPagamentos.Any())
             {
                 _logger.LogWarning("Nenhum pagamento foi retornado");
@@ -83,6 +97,15 @@ namespace TinyMais.Application.AppServices
                                     {
                                         if (pagamentoTrackCash.code == "deposits")
                                         {
+                                            var comissao = macroPagamento.payments
+                                                .Where(p => p.current_installment == pagamentoTrackCash.current_installment)
+                                                .Where(p => p.code == "comissions")
+                                                .Sum(p => p.value.LerMoedaTrackCash());
+
+                                            var valorLiquido = pagamentoTrackCash.value.LerMoedaTrackCash() + comissao;
+
+                                            //TODO: corrigir o valor do pagamento
+
                                             var contasTiny = await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash);
 
                                             if (contasTiny != null)
@@ -196,6 +219,19 @@ namespace TinyMais.Application.AppServices
                 _logger.LogWarning($"Pedido não encontrado no Tiny.");
 
             return pedidos;
+        }
+
+        private async Task<IEnumerable<PaymentListDTO>> ObterPayments(string idPedidoMarketPlace)
+        {
+            _logger.LogInformation($"Obtendo pagamentos da Track Cash...");
+
+            var pagamentos = new List<PaymentListDTO>();
+
+            RootDTO root = await _paymentHttpClient.ConsultarPorPedidoAsync(idPedidoMarketPlace);
+
+            pagamentos.AddRange(root.data.SelectMany(p => p.List));
+
+            return pagamentos.Where(p => p.order != null);
         }
 
         private async Task<IEnumerable<PaymentListDTO>> ObterPayments(DateTime dataInicial, DateTime dataFinal)

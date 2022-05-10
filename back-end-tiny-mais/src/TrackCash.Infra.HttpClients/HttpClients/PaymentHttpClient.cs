@@ -19,6 +19,13 @@ namespace TrackCash.Infra.HttpClients.HttpClients
 
         }
 
+        public Task<RootDTO?> ConsultarPorPedidoAsync(string idPedidoMarketPlace)
+        {
+            var filtros = $"mkp_order={idPedidoMarketPlace}";
+            var url = $"{URL_BASE}/{URL_PAGAMENTO}?{filtros}";
+            return GetAsync<RootDTO>(url);
+        }
+
         public Task<RootDTO?> ConsultarPorDataAsync(DateTime dataInicial, DateTime dataFinal, int paginaAtual)
         {
             var filtros = $"date_start={dataInicial.ToTrackCashDate()}";
