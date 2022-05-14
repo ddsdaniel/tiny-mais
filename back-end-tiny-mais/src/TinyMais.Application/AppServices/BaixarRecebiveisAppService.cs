@@ -97,15 +97,6 @@ namespace TinyMais.Application.AppServices
                                     {
                                         if (pagamentoTrackCash.code == "deposits")
                                         {
-                                            var comissao = macroPagamento.payments
-                                                .Where(p => p.current_installment == pagamentoTrackCash.current_installment)
-                                                .Where(p => p.code == "comissions")
-                                                .Sum(p => p.value.LerMoedaTrackCash());
-
-                                            var valorLiquido = pagamentoTrackCash.value.LerMoedaTrackCash() + comissao;
-
-                                            //TODO: corrigir o valor do pagamento
-
                                             var contasTiny = await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash);
 
                                             if (contasTiny != null)
@@ -116,7 +107,12 @@ namespace TinyMais.Application.AppServices
 
                                                 if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
                                                 {
-                                                    await BaixarContaReceber(pagamentoTrackCash, contaTiny);
+                                                    var taxas = Math.Abs(macroPagamento.payments
+                                                        .Where(p => p.current_installment == pagamentoTrackCash.current_installment)
+                                                        .Where(p => p.code == "comissions")
+                                                        .Sum(p => p.value.LerMoedaTrackCash()));
+
+                                                    await BaixarContaReceber(pagamentoTrackCash, contaTiny, taxas);
                                                 }
                                                 else
                                                 {
@@ -136,7 +132,7 @@ namespace TinyMais.Application.AppServices
             _logger.LogInformation("Finalizou BaixarAsync");
         }
 
-        private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny)
+        private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny, double taxas)
         {
             //comissão teria que ser conciliada manualmente
             //a questão maior é o valor cheio mesmo
@@ -147,7 +143,8 @@ namespace TinyMais.Application.AppServices
             {
                 id = contaTiny.id,
                 data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),
-                valorPago = pagamentoTrackCash.value.LerMoedaTrackCash()
+                valorPago = pagamentoTrackCash.value.LerMoedaTrackCash(),
+                valorTaxas = taxas
             };
             var resultadoBaixa = await _contaReceberHttpClient.BaixarAsync(contaBaixaTiny);
 
