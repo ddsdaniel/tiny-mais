@@ -14,6 +14,7 @@
         public string current_installment { get; set; }
         public string installments { get; set; }
         public string value { get; set; }
+        public string id_code { get; set; }
 
         public override string ToString() => $"({code}) {description} - {date} - {current_installment}/{installments}: {value}";
     }

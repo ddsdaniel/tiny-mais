@@ -2,6 +2,6 @@
 {
     public interface IMarketPlaceOrderIdFormatter
     {
-        string Formatar(string orderId, string channel);
+        string Formatar(string orderId, string channel, string mkp_id_channel);
     }
 }

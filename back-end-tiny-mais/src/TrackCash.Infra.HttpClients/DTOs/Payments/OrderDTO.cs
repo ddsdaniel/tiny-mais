@@ -19,6 +19,7 @@
         public string mkp_total { get; set; }
         public string mkp_refunded { get; set; }
         public string conciliation_payments { get; set; }
+        public string mkp_id_channel { get; set; }
         //public string Product: []
     }
 }

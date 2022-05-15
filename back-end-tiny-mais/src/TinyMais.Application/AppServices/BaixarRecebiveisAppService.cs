@@ -7,6 +7,7 @@ using Tiny.Infra.HttpClients.DTOs.NotaFiscal;
 using Tiny.Infra.HttpClients.DTOs.Pedido;
 using Tiny.Infra.HttpClients.DTOs.Pedidos;
 using TinyMais.Application.Abstractions.AppServices;
+using TinyMais.Application.Constantes;
 using TrackCash.Infra.HttpClients.Abstractions.Formatters;
 using TrackCash.Infra.HttpClients.Abstractions.HttpClients;
 using TrackCash.Infra.HttpClients.DTOs.Payments;
@@ -45,10 +46,6 @@ namespace TinyMais.Application.AppServices
 
         public async Task BaixarAsync(DateTime dataInicial, DateTime dataFinal)
         {
-            //TODO: remover este teste
-            //dataInicial = Convert.ToDateTime("01/03/2022");
-            //dataFinal = Convert.ToDateTime("30/04/2022");
-
             _logger.LogInformation($"Iniciando {nameof(BaixarRecebiveisAppService)}.BaixarAsync({dataInicial:dd/MM/yyyy}, {dataFinal:dd/MM/yyyy})");
 
             var macroPagamentos = await ObterPayments(dataInicial, dataFinal);
@@ -78,8 +75,6 @@ namespace TinyMais.Application.AppServices
 
                 foreach (var pedidoTrackCash in macroPagamento.order)
                 {
-                    //if (!pedidoTrackCash.mkp_order_id.EndsWith("1093570493946349")) continue;
-
                     var pedidoResumidoTiny = await ObterPedidoResumido(pedidoTrackCash);
 
                     if (pedidoResumidoTiny != null)
@@ -95,7 +90,7 @@ namespace TinyMais.Application.AppServices
                                 {
                                     foreach (var pagamentoTrackCash in macroPagamento.payments)
                                     {
-                                        if (pagamentoTrackCash.code == "deposits")
+                                        if (pagamentoTrackCash.id_code == TipoPagamento.VENDA)
                                         {
                                             var contasTiny = await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash);
 
@@ -109,7 +104,7 @@ namespace TinyMais.Application.AppServices
                                                 {
                                                     var taxas = Math.Abs(macroPagamento.payments
                                                         .Where(p => p.current_installment == pagamentoTrackCash.current_installment)
-                                                        .Where(p => p.code == "comissions")
+                                                        .Where(p => p.id_code == TipoPagamento.COMISSAO)
                                                         .Sum(p => p.value.LerMoedaTrackCash()));
 
                                                     await BaixarContaReceber(pagamentoTrackCash, contaTiny, taxas);
@@ -206,7 +201,7 @@ namespace TinyMais.Application.AppServices
 
         private async Task<PedidosRootDTO> ObterPedidoResumido(OrderDTO order)
         {
-            var marketPlaceOrderId = _marketPlaceOrderIdFactory.Formatar(order.mkp_order_id, order.mkp_channel);
+            var marketPlaceOrderId = _marketPlaceOrderIdFactory.Formatar(order.mkp_order_id, order.mkp_channel, order.mkp_id_channel);
 
             _logger.LogInformation($"Obtendo pedidos (resumidos) {marketPlaceOrderId} de {order.mkp_channel}...");
 
