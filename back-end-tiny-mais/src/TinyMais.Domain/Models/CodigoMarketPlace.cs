@@ -4,5 +4,6 @@
     {
         public string MarketPlace { get; set; }
         public string Codigo { get; set; }
+        public string ContaDestino { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Infra.HttpClients.Extensions;
+using Microsoft.Extensions.Logging;
 using Tiny.Infra.HttpClients.Abstractions.HttpClients;
 using Tiny.Infra.HttpClients.Constantes;
 using Tiny.Infra.HttpClients.DTOs.ContasReceber;
@@ -8,10 +9,10 @@ using Tiny.Infra.HttpClients.DTOs.Pedido;
 using Tiny.Infra.HttpClients.DTOs.Pedidos;
 using TinyMais.Application.Abstractions.AppServices;
 using TinyMais.Application.Constantes;
+using TrackCash.Infra.HttpClients.Abstractions.Factories;
 using TrackCash.Infra.HttpClients.Abstractions.Formatters;
 using TrackCash.Infra.HttpClients.Abstractions.HttpClients;
 using TrackCash.Infra.HttpClients.DTOs.Payments;
-using TrackCash.Infra.HttpClients.Extensions;
 
 namespace TinyMais.Application.AppServices
 {
@@ -24,6 +25,7 @@ namespace TinyMais.Application.AppServices
         private readonly INotaFiscalHttpClient _notaFiscalHttpClient;
         private readonly IPedidoHttpClient _pedidoHttpClient;
         private readonly IPedidosHttpClient _pedidosHttpClient;
+        private readonly IMarketPlaceConfigFactory _marketPlaceConfigFactory;
 
         public BaixarRecebiveisAppService(
             ILogger<BaixarRecebiveisAppService> logger,
@@ -32,7 +34,8 @@ namespace TinyMais.Application.AppServices
             IContaReceberHttpClient contaReceberHttpClient,
             INotaFiscalHttpClient notaFiscalHttpClient,
             IPedidoHttpClient pedidoHttpClient,
-            IPedidosHttpClient pedidosHttpClient
+            IPedidosHttpClient pedidosHttpClient,
+            IMarketPlaceConfigFactory marketPlaceConfigFactory
             )
         {
             _paymentHttpClient = paymentHttpClient;
@@ -42,6 +45,7 @@ namespace TinyMais.Application.AppServices
             _notaFiscalHttpClient = notaFiscalHttpClient;
             _pedidoHttpClient = pedidoHttpClient;
             _pedidosHttpClient = pedidosHttpClient;
+            _marketPlaceConfigFactory = marketPlaceConfigFactory;
         }
 
         public async Task BaixarAsync(DateTime dataInicial, DateTime dataFinal)
@@ -105,9 +109,9 @@ namespace TinyMais.Application.AppServices
                                                     var taxas = Math.Abs(macroPagamento.payments
                                                         .Where(p => p.current_installment == pagamentoTrackCash.current_installment)
                                                         .Where(p => p.id_code == TipoPagamento.COMISSAO)
-                                                        .Sum(p => p.value.LerMoedaTrackCash()));
+                                                        .Sum(p => p.value.LerMoedaJson()));
 
-                                                    await BaixarContaReceber(pagamentoTrackCash, contaTiny, taxas);
+                                                    await BaixarContaReceber(pagamentoTrackCash, contaTiny, taxas, pedidoTrackCash);
                                                 }
                                                 else
                                                 {
@@ -127,20 +131,36 @@ namespace TinyMais.Application.AppServices
             _logger.LogInformation("Finalizou BaixarAsync");
         }
 
-        private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny, double taxas)
+        private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny, double taxas, OrderDTO order)
         {
             //comissão teria que ser conciliada manualmente
             //a questão maior é o valor cheio mesmo
 
             _logger.LogInformation($"Baixando conta a receber {contaTiny.id}...");
 
+            var valorBruto = pagamentoTrackCash.value.LerMoedaJson();
+
+            var diferenca = Math.Round(contaTiny.valor.LerMoedaJson() - valorBruto, 2, MidpointRounding.AwayFromZero);
+
+            if (Math.Abs(diferenca) <= 0.03)
+            {
+                valorBruto += diferenca;
+            }
+
+            var valorLiquido = Math.Round(valorBruto - taxas, 2, MidpointRounding.AwayFromZero);
+
             var contaBaixaTiny = new ContaBaixaDTO
             {
                 id = contaTiny.id,
                 data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),
-                valorPago = pagamentoTrackCash.value.LerMoedaTrackCash(),
+                valorPago = valorLiquido,
                 valorTaxas = taxas
             };
+
+            var marketPlace = _marketPlaceConfigFactory.Obter(order.mkp_channel, order.mkp_id_channel);
+            if (marketPlace != null)
+                contaBaixaTiny.contaDestino = marketPlace.ContaDestino;
+
             var resultadoBaixa = await _contaReceberHttpClient.BaixarAsync(contaBaixaTiny);
 
             if (resultadoBaixa.retorno.status == RetornoMetodo.Ok)

@@ -9,8 +9,10 @@ using TinyMais.Application.Workers;
 using TinyMais.Domain.Abstractions.Models;
 using TinyMais.Domain.Models;
 using TinyMais.WebAPI.HostedService;
+using TrackCash.Infra.HttpClients.Abstractions.Factories;
 using TrackCash.Infra.HttpClients.Abstractions.Formatters;
 using TrackCash.Infra.HttpClients.Abstractions.HttpClients;
+using TrackCash.Infra.HttpClients.Factories;
 using TrackCash.Infra.HttpClients.Formatters;
 using TrackCash.Infra.HttpClients.HttpClients;
 
@@ -35,6 +37,7 @@ namespace TinyMais.WebAPI.Configurations
             services.AddScoped<IOrderHttpClient, OrderHttpClient>();
             services.AddScoped<IPaymentHttpClient, PaymentHttpClient>();
             services.AddScoped<IMarketPlaceOrderIdFormatter, MarketPlaceOrderIdFormatter>();
+            services.AddScoped<IMarketPlaceConfigFactory, MarketPlaceConfigFactory>();
 
             //Infra Tiny
             services.AddScoped<IContaReceberHttpClient, ContaReceberHttpClient>();
