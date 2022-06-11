@@ -133,9 +133,6 @@ namespace TinyMais.Application.AppServices
 
         private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny, double taxas, OrderDTO order)
         {
-            //comissão teria que ser conciliada manualmente
-            //a questão maior é o valor cheio mesmo
-
             _logger.LogInformation($"Baixando conta a receber {contaTiny.id}...");
 
             var valorBruto = pagamentoTrackCash.value.LerMoedaJson();
