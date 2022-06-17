@@ -92,32 +92,35 @@ namespace TinyMais.Application.AppServices
 
                                 if (notaFiscalTiny != null)
                                 {
+                                    PaymentDTO ultimoPagamento = null;
                                     foreach (var pagamentoTrackCash in macroPagamento.payments)
                                     {
-                                        if (pagamentoTrackCash.id_code == TipoPagamento.VENDA)
+                                        if (ultimoPagamento != null &&
+                                            ultimoPagamento.mkp_order_id == pagamentoTrackCash.mkp_order_id &&
+                                            ultimoPagamento.current_installment == pagamentoTrackCash.current_installment)
+                                            continue;
+
+                                        if (pagamentoTrackCash.id_code != TipoPagamento.VENDA)
+                                            continue;
+
+                                        ultimoPagamento = pagamentoTrackCash;                                    
+
+                                        var contasTiny = await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash);
+
+                                        if (contasTiny == null)
+                                            continue;
+
+                                        var contasReceberTiny = contasTiny.Select(c => c.conta);
+
+                                        var contaTiny = contasReceberTiny.FirstOrDefault();
+
+                                        if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
                                         {
-                                            var contasTiny = await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash);
-
-                                            if (contasTiny != null)
-                                            {
-                                                var contasReceberTiny = contasTiny.Select(c => c.conta);
-
-                                                var contaTiny = contasReceberTiny.FirstOrDefault();
-
-                                                if (contaTiny?.situacao == SituacaoContaReceber.ABERTO)
-                                                {
-                                                    var taxas = Math.Abs(macroPagamento.payments
-                                                        .Where(p => p.current_installment == pagamentoTrackCash.current_installment)
-                                                        .Where(p => p.id_code == TipoPagamento.COMISSAO)
-                                                        .Sum(p => p.value.LerMoedaJson()));
-
-                                                    await BaixarContaReceber(pagamentoTrackCash, contaTiny, taxas, pedidoTrackCash);
-                                                }
-                                                else
-                                                {
-                                                    _logger.LogInformation($"Conta a receber já estava com o status {contaTiny?.situacao}");
-                                                }
-                                            }
+                                            await BaixarContaReceber(pagamentoTrackCash, contaTiny, pedidoTrackCash, macroPagamento);
+                                        }
+                                        else
+                                        {
+                                            _logger.LogInformation($"Conta a receber já estava com o status {contaTiny?.situacao}");
                                         }
                                     }
                                 }
@@ -131,11 +134,22 @@ namespace TinyMais.Application.AppServices
             _logger.LogInformation("Finalizou BaixarAsync");
         }
 
-        private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny, double taxas, OrderDTO order)
+        private async Task BaixarContaReceber(PaymentDTO pagamentoTrackCash, ContaDTO? contaTiny, OrderDTO order, PaymentListDTO macroPagamento)
         {
             _logger.LogInformation($"Baixando conta a receber {contaTiny.id}...");
 
-            var valorBruto = pagamentoTrackCash.value.LerMoedaJson();
+            var taxas = Math.Abs(macroPagamento.payments
+                                                .Where(p => p.current_installment == pagamentoTrackCash.current_installment)
+                                                .Where(p => p.id_code == TipoPagamento.COMISSAO)
+                                                .Sum(p => p.value.LerMoedaJson()));
+
+            var valorBruto = macroPagamento.payments
+                                        .Where(p => p.mkp_order_id == pagamentoTrackCash.mkp_order_id &&
+                                                    p.current_installment == pagamentoTrackCash.current_installment &&
+                                                    p.id_code == TipoPagamento.VENDA
+                                              )
+                                        .Sum(p => p.value.LerMoedaJson()
+                                        );
 
             var diferenca = Math.Round(contaTiny.valor.LerMoedaJson() - valorBruto, 2, MidpointRounding.AwayFromZero);
 
