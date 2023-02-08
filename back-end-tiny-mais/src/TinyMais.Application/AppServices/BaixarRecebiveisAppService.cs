@@ -146,10 +146,9 @@ namespace TinyMais.Application.AppServices
             var valorBruto = macroPagamento.payments
                                         .Where(p => p.mkp_order_id == pagamentoTrackCash.mkp_order_id &&
                                                     p.current_installment == pagamentoTrackCash.current_installment &&
-                                                    p.id_code == TipoPagamento.VENDA
+                                                    (p.id_code == TipoPagamento.VENDA || p.id_code == TipoPagamento.FIXED_VALUE)
                                               )
-                                        .Sum(p => p.value.LerMoedaJson()
-                                        );
+                                        .Sum(p => p.value.LerMoedaJson());
 
             var diferenca = Math.Round(contaTiny.valor.LerMoedaJson() - valorBruto, 2, MidpointRounding.AwayFromZero);
 
