@@ -1,17 +1,8 @@
 {
-  "$schema": "https://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:60376",
-      "sslPort": 44391
-    }
-  },
   "profiles": {
     "TinyMais.WebAPI": {
       "commandName": "Project",
-      "commandLineArgs": "5162881890001",
+      "commandLineArgs": "01/08/2022 31/08/2022",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
@@ -27,6 +18,15 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:60376",
+      "sslPort": 44391
     }
   }
 }
