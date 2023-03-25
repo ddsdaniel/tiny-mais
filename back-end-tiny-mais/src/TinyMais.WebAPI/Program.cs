@@ -2,6 +2,7 @@ using DDS.Logs.Extensions;
 using DDS.Logs.Middlewares;
 using Serilog;
 using System.Diagnostics;
+using System.Reflection;
 using TinyMais.Application.Abstractions.AppServices;
 using TinyMais.WebAPI.Configurations;
 
@@ -47,6 +48,9 @@ try
     app.MapControllers();
 
     app.UseMiddleware<RequestLoggingMiddleware>();
+
+    var version = Assembly.GetExecutingAssembly().GetName().Version;
+    Serilog.Log.Information($"Versão: {version.Major}.{version.Minor}.{version.Build}");
 
     if (args.Length == 2)
     {

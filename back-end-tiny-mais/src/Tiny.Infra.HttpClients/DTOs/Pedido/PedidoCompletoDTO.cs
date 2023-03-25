@@ -22,7 +22,7 @@
         public string nome_transportador { get; set; }
         public string frete_por_conta { get; set; }
         public string valor_frete { get; set; }
-        public string valor_desconto { get; set; }
+        //public string valor_desconto { get; set; }
         public string outras_despesas { get; set; }
         public string total_produtos { get; set; }
         public string total_pedido { get; set; }

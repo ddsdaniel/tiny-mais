@@ -150,6 +150,13 @@ namespace TinyMais.Application.AppServices
                                               )
                                         .Sum(p => p.value.LerMoedaJson());
 
+            var valorDesconto = Math.Abs(macroPagamento.payments
+                                        .Where(p => p.mkp_order_id == pagamentoTrackCash.mkp_order_id &&
+                                                    p.current_installment == pagamentoTrackCash.current_installment &&
+                                                    p.id_code == TipoPagamento.FIXED_VALUE
+                                              )
+                                        .Sum(p => p.value.LerMoedaJson()));
+
             var diferenca = Math.Round(contaTiny.valor.LerMoedaJson() - valorBruto, 2, MidpointRounding.AwayFromZero);
 
             if (Math.Abs(diferenca) <= 0.03)
@@ -164,7 +171,8 @@ namespace TinyMais.Application.AppServices
                 id = contaTiny.id,
                 data = Convert.ToDateTime(pagamentoTrackCash.date).ToString("dd/MM/yyyy"),
                 valorPago = valorLiquido,
-                valorTaxas = taxas
+                valorTaxas = taxas,
+                valorDesconto = valorDesconto
             };
 
             var marketPlace = _marketPlaceConfigFactory.Obter(order.mkp_channel, order.mkp_id_channel);

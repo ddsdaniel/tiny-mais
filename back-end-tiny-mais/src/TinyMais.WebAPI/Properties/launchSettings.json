@@ -2,7 +2,7 @@
   "profiles": {
     "TinyMais.WebAPI": {
       "commandName": "Project",
-      "commandLineArgs": "1164970367001231",
+      "commandLineArgs": "1138670876916801",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {

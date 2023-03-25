@@ -28,7 +28,7 @@
         public string valor_ipi { get; set; }
         public string valor_issqn { get; set; }
         public string valor_nota { get; set; }
-        public string valor_desconto { get; set; }
+        //public string valor_desconto { get; set; }
         public string valor_faturado { get; set; }
         public string frete_por_conta { get; set; }
         public TransportadorDTO transportador { get; set; }
