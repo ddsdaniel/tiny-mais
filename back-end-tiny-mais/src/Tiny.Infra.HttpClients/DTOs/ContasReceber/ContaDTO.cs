@@ -12,6 +12,6 @@
         public string situacao { get; set; }
         public string data_emissao { get; set; }
         public string valor { get; set; }
-        public string saldo { get; set; }
+        //public decimal saldo { get; set; }
     }
 }
