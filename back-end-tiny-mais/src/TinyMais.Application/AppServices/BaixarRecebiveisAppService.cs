@@ -103,7 +103,7 @@ namespace TinyMais.Application.AppServices
                                         if (pagamentoTrackCash.id_code != TipoPagamento.VENDA)
                                             continue;
 
-                                        ultimoPagamento = pagamentoTrackCash;                                    
+                                        ultimoPagamento = pagamentoTrackCash;
 
                                         var contasTiny = await ObterContasReceber(notaFiscalTiny, pagamentoTrackCash);
 
@@ -253,11 +253,11 @@ namespace TinyMais.Application.AppServices
 
         private async Task<IEnumerable<PaymentListDTO>> ObterPayments(string idPedidoMarketPlace)
         {
-            _logger.LogInformation($"Obtendo pagamentos da Track Cash...");
+            _logger.LogInformation("Obtendo pagamentos da Track Cash...");
 
             var pagamentos = new List<PaymentListDTO>();
 
-            RootDTO root = await _paymentHttpClient.ConsultarPorPedidoAsync(idPedidoMarketPlace);
+            RootDTO? root = await _paymentHttpClient.ConsultarPorPedidoAsync(idPedidoMarketPlace);
 
             pagamentos.AddRange(root.data.SelectMany(p => p.List));
 
@@ -266,17 +266,20 @@ namespace TinyMais.Application.AppServices
 
         private async Task<IEnumerable<PaymentListDTO>> ObterPayments(DateTime dataInicial, DateTime dataFinal)
         {
-            _logger.LogInformation($"Obtendo pagamentos da Track Cash...");
+            _logger.LogInformation("Obtendo pagamentos da Track Cash...");
 
             var pagamentos = new List<PaymentListDTO>();
             var paginaAtual = 1;
-            RootDTO root = null;
+            RootDTO? root = null;
             do
             {
-                _logger.LogInformation($"Página {paginaAtual}...");
+                _logger.LogInformation("Pagina {Pagina}...", paginaAtual);
                 root = await _paymentHttpClient.ConsultarPorDataAsync(dataInicial, dataFinal, paginaAtual);
 
-                pagamentos.AddRange(root.data.SelectMany(p => p.List));
+                if (root != null)
+                {
+                    pagamentos.AddRange(root.data.SelectMany(p => p.List));
+                }
 
                 paginaAtual++;
             } while (paginaAtual <= root.meta.last_page);

@@ -33,7 +33,9 @@ mkdir "%PASTA_DESTINO%"
 :: BUILD DO DOTNET com saída na pasta destino
 echo.
 echo #### Iniciando build do .NET
-dotnet publish ..\back-end-tiny-mais\src\TinyMais.WebAPI\ -c Release --nologo -p:PublishProfile=release-win-x64.pubxml --output "%PASTA_DESTINO%\tiny-mais-api"	
+REM dotnet publish ..\back-end-tiny-mais\src\TinyMais.WebAPI\ -c Release --nologo -p:PublishProfile=release-win-x64.pubxml --output "%PASTA_DESTINO%\tiny-mais-api"	
+dotnet publish ..\back-end-tiny-mais\src\TinyMais.WebAPI\ -c Release --nologo -p:PublishProfile=release-win-x64.pubxml -p:PublishSingleFile=true -r win-x64 --output "%PASTA_DESTINO%\tiny-mais-api"
+
 
 :: Comprimir se possível
 if exist "%ProgramFiles%\WinRAR\rar.exe" (
